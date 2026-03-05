@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+}
+
+.dashboard {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: #4e73df;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.sidebar li:hover {
+    background: #2e59d9;
+}
+
+/* Main */
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Topbar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.profile-btn {
+    padding: 8px 15px;
+    border: none;
+    background: #1cc88a;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Sections */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Chatbot */
+.chatbox {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.messages {
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.chatbox input {
+    width: 70%;
+    padding: 8px;
+}
+
+.chatbox button {
+    padding: 8px;
+}

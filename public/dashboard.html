@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fin2Future Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Fin2Future</h2>
+        <ul>
+            <li onclick="showSection('analytics')">📊 Dashboard</li>
+            <li onclick="showSection('learning')">📚 Learning Modules</li>
+            <li onclick="showSection('budget')">💰 Budget Game</li>
+            <li onclick="showSection('chatbot')">🤖 Chatbot</li>
+            <li onclick="logout()">🚪 Logout</li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div></div>
+            <button class="profile-btn" onclick="goToProfile()">
+                👤 Loading...
+            </button>
+        </div>
+
+        <!-- Sections -->
+        <div id="analytics" class="section active">
+            <h2>Financial Analytics</h2>
+            <div class="cards">
+                <div class="card">Savings: ₹12,000</div>
+                <div class="card">Expenses: ₹8,500</div>
+                <div class="card">Investments: ₹5,000</div>
+            </div>
+        </div>
+
+        <div id="learning" class="section">
+            <h2>Learning Modules</h2>
+            <p>Coming soon: Stock Basics, Budgeting 101, Investing Guide.</p>
+        </div>
+
+        <div id="budget" class="section">
+            <h2>Budget Game</h2>
+            <p>Simulate your monthly income and expenses.</p>
+        </div>
+
+        <div id="chatbot" class="section">
+            <h2>Finance Chatbot</h2>
+            <div class="chatbox">
+                <div class="messages" id="messages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask something...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// 🔐 Load logged-in user
+async function loadUser() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const res = await fetch("/api/auth/me", {
+        headers: {
+            "Authorization": token
+        }
+    });
+
+    if (res.status !== 200) {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const user = await res.json();
+
+    // Show email in profile button
+    document.querySelector(".profile-btn").textContent = "👤 " + user.email;
+}
+
+loadUser();
+
+
+// 📂 Section Switching
+function showSection(id) {
+    document.querySelectorAll(".section").forEach(sec => {
+        sec.classList.remove("active");
+    });
+    document.getElementById(id).classList.add("active");
+}
+
+
+// 🤖 Chatbot Demo
+function sendMessage() {
+    const input = document.getElementById("chatInput");
+    const messages = document.getElementById("messages");
+
+    if(input.value.trim() === "") return;
+
+    const userMsg = document.createElement("div");
+    userMsg.classList.add("user-msg");
+    userMsg.textContent = "You: " + input.value;
+    messages.appendChild(userMsg);
+
+    const botMsg = document.createElement("div");
+    botMsg.classList.add("bot-msg");
+    botMsg.textContent = "Bot: This is a demo chatbot.";
+    messages.appendChild(botMsg);
+
+    input.value = "";
+    messages.scrollTop = messages.scrollHeight;
+}
+
+
+// 👤 Profile Navigation
+function goToProfile() {
+    window.location.href = "profile.html";
+}
+
+
+// 🚪 Logout
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>
