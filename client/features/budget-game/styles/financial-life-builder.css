@@ -1,0 +1,47 @@
+.flb-container{min-height:520px;background:linear-gradient(180deg,#041029 0%,#071a3a 50%,#08264a 100%);padding:24px;border-radius:18px;box-shadow:inset 0 6px 30px rgba(3,10,30,0.6)}
+.flb-grid{display:grid;grid-template-columns:1fr 380px;gap:20px}
+.flb-title{color:#e6eefc;font-weight:700;margin-bottom:12px}
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));padding:12px;border-radius:10px;color:#f1f8ff;border:3px solid rgba(2,8,20,0.6);box-shadow:6px 8px 0 rgba(2,6,30,0.6);}
++.card h3{font-size:13px;color:#cfe6ff;margin-bottom:6px}
++.card-value{font-weight:800;font-size:18px;color:#fff}
+.choices{margin-top:6px}
+.section-title{color:#dbeeff;font-weight:700;margin-bottom:8px}
+.choice-row{display:flex;gap:18px;margin-bottom:12px}
+.choice-options{display:flex;gap:10px;flex-wrap:wrap}
+.choice-block{background:#07203a;color:#dff3ff;padding:10px 14px;border-radius:6px;border:3px solid rgba(255,255,255,0.03);min-width:120px;text-align:left;transition:transform .22s cubic-bezier(.2,.9,.2,1),box-shadow .22s}
++.choice-block.selected{box-shadow:0 14px 34px rgba(3,12,30,0.6);transform:translateY(-6px);border-color:rgba(99,102,241,0.8);outline:4px solid rgba(99,102,241,0.06)}
+.choice-name{font-weight:600}
+.choice-cost{font-size:13px;color:#bfe9ff;margin-top:6px}
+.action-row{display:flex;gap:10px;margin-top:14px}
+.primary-btn{background:linear-gradient(90deg,#3b82f6,#60a5fa);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700}
+.ghost-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#dbeeff;padding:10px 14px;border-radius:10px}
+.stats{display:flex;flex-direction:column;gap:10px}
+.stat-bar{display:flex;align-items:center;gap:10px}
+.stat-label{width:80px;color:#dbeeff;font-weight:600}
+.stat-track{flex:1;background:rgba(255,255,255,0.04);height:12px;border-radius:8px;overflow:hidden}
+.stat-fill{height:12px;border-radius:8px;transition:width .8s cubic-bezier(.2,.9,.2,1),background-color .4s}
++.stat-value{width:80px;text-align:right;color:#cfe6ff;font-weight:700}
++.stat-fill.bg-emerald-400{background:linear-gradient(90deg,#10b981,#34d399)}
++.stat-fill.bg-cyan-400{background:linear-gradient(90deg,#06b6d4,#67e8f9)}
++.stat-fill.bg-red-400{background:linear-gradient(90deg,#f87171,#fb7185)}
++.stat-fill.bg-yellow-400{background:linear-gradient(90deg,#facc15,#f59e0b)}
++.stat-fill.bg-indigo-400{background:linear-gradient(90deg,#6366f1,#7c3aed)}
+.muted{color:#bcd8ff;margin-top:8px}
+.event-popup{position:fixed;left:50%;top:22%;transform:translateX(-50%);padding:14px 20px;border-radius:12px;color:#041022;font-weight:800;z-index:70;animation:popup .9s ease;backdrop-filter:blur(6px)}
++.event-popup.good{background:linear-gradient(90deg,#6ee7b7,#60a5fa);color:#022223}
++.event-popup.bad{background:linear-gradient(90deg,#ff7b7b,#ff4d4d);color:#2b0202}
++.floating-plus{position:fixed;right:24%;top:18%;color:#b3ffd9;font-weight:900;animation:floatUp 1.2s cubic-bezier(.2,.9,.2,1);text-shadow:0 6px 18px rgba(0,0,0,0.6);transform:translateY(0)}
++.shake{animation:shake .9s cubic-bezier(.36,.07,.19,.97)}
++.bad-shake .card, .bad-shake .choice-block{transform-origin:center;animation:shake .9s}
++
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}40%{transform:translateY(-20px) scale(1.05)}100%{transform:translateY(-80px) scale(.95);opacity:0}}
++@keyframes popup{0%{opacity:0;transform:translateY(-10px) scale(.98)}30%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:1}}
++@keyframes shake{0%{transform:translateX(0) rotate(0deg)}20%{transform:translateX(-10px) rotate(-1deg)}40%{transform:translateX(10px) rotate(1deg)}60%{transform:translateX(-6px) rotate(-0.6deg)}80%{transform:translateX(6px) rotate(0.6deg)}100%{transform:translateX(0) rotate(0deg)}}
++
+/* Minecraft-style cards */
+.minecraft-card{box-shadow:inset 0 0 0 2px rgba(255,255,255,0.02),0 8px 20px rgba(0,0,0,0.6)}
+.minecraft-card.selected{outline:3px solid rgba(99,102,241,0.25)}
+
+/* Responsive */
+@media (max-width:1100px){.flb-grid{grid-template-columns:1fr}}
