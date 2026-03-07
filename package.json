@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "fin2future",
   "version": "1.0.0",
   "description": "",
@@ -27,4 +28,20 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.3"
   }
+=======
+  "name": "financial-literacy-quiz",
+  "version": "1.0.0",
+  "description": "Financial Literacy Quiz Application",
+  "scripts": {
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && npm start",
+    "build": "cd client && npm run build"
+  },
+  "keywords": ["quiz", "financial-literacy", "react", "express"],
+  "author": "",
+  "license": "MIT"
+>>>>>>> a5ac881 (Added basic level games)
 }
