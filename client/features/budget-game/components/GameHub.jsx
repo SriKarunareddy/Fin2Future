@@ -5,6 +5,7 @@ import SpendSmartSprint from './games/basic/SpendSmartSprint';
 import NeedsVsWantsSwipe from './games/basic/NeedsVsWantsSwipe';
 import FlashFinanceLightning from './games/basic/FlashFinanceLightning';
 import SavingsJarBuilder from './games/basic/SavingsJarBuilder';
+import InvestmentGarden from './games/medium/InvestmentGarden';
 import WealthBuilder from './games/advanced/WealthBuilder';
 import ResultScreen from './ResultScreen';
 import { getPlayerProgress, savePlayerProgress } from '../utils/progressManager';
@@ -148,6 +149,10 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
         return <NeedsVsWantsSwipe {...gameProps} />;
       case 'savings-jar':
         return <SavingsJarBuilder {...gameProps} />;
+
+      // Medium Level Games
+      case 'investment-garden':
+        return <InvestmentGarden {...gameProps} />;
 
       // Advanced Level Games
       case 'wealth-builder':
