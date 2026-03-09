@@ -46,13 +46,13 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
     ],
     Medium: [
       {
-        id: 'coming-soon',
-        name: 'Coming Soon',
-        description: 'New games in development!',
-        icon: '🚧',
-        duration: 'TBD',
+        id: 'investment-garden',
+        name: 'Investment Garden',
+        description: 'Grow your wealth through smart investment strategies',
+        icon: '🌱',
+        duration: '3 rounds',
         difficulty: 'Medium',
-        color: 'from-gray-600 to-gray-500'
+        color: 'from-green-600 to-emerald-600'
       }
     ],
     Advanced: [
