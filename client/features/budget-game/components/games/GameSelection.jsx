@@ -1,10 +1,14 @@
 import React from 'react';
 import GameModuleLayout from '../shared/GameModuleLayout';
+import { getLevelFromXP } from '../../utils/progressManager';
 
 /**
  * GameSelection - Choose a game within selected level
  */
 const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
+  const currentLevel = playerProgress?.level || getLevelFromXP(playerProgress?.xp || 0);
+  const currentXP = playerProgress?.xp || 0;
+  const maxXP = (currentLevel * 100);
   const games = {
     Basic: [
       {
@@ -53,6 +57,15 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
         duration: '3 rounds',
         difficulty: 'Medium',
         color: 'from-green-600 to-emerald-600'
+      },
+      {
+        id: 'scam-detective',
+        name: 'Scam Detective',
+        description: 'Identify and avoid financial scams in realistic scenarios',
+        icon: '🕵️',
+        duration: '7 scenarios',
+        difficulty: 'Medium',
+        color: 'from-purple-600 to-indigo-600'
       }
     ],
     Advanced: [
@@ -106,11 +119,11 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
   return (
     <GameModuleLayout
       title={`${level} Games`}
-      level={level}
-      currentXP={playerProgress?.xp || 0}
-      maxXP={playerProgress?.xpToNextLevel || 1000}
+      level={currentLevel}
+      currentXP={currentXP}
+      maxXP={maxXP}
       coins={playerProgress?.coins || 0}
-      streak={playerProgress?.streak || 0}
+      streak={playerProgress?.streaks?.current || 0}
       onBack={onBack}
     >
       <div className="max-w-6xl mx-auto">

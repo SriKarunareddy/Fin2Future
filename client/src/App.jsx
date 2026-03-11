@@ -4,8 +4,6 @@ import GameHub from '../features/budget-game/components/GameHub';
 import ErrorBoundary from './ErrorBoundary';
 
 // global error state collector
-
-
 function App() {
   const [view, setView] = useState('quiz'); // 'quiz' or 'games'
   const [userLevel, setUserLevel] = useState('Basic');
@@ -20,7 +18,6 @@ function App() {
       setJsError(evt.reason ? evt.reason.message || evt.reason : String(evt));
     };
   }, []);
-
 
   const handleQuizComplete = (level) => {
     setUserLevel(level);

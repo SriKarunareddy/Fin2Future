@@ -159,10 +159,75 @@ export function updateGameStats(progress, gameName, result) {
 }
 
 /**
+ * Award XP for game completion
+ */
+export function awardGameXP(progress, gameName, difficulty, score, perfect = false) {
+  const baseXP = {
+    'Basic': 20,
+    'Medium': 30,
+    'Advanced': 50
+  }[difficulty] || 20;
+
+  const perfectBonus = perfect ? 10 : 0;
+  const totalXP = baseXP + perfectBonus;
+
+  const updatedProgress = {
+    ...progress,
+    xp: progress.xp + totalXP,
+    gamesPlayed: {
+      ...progress.gamesPlayed,
+      [gameName]: (progress.gamesPlayed[gameName] || 0) + 1
+    },
+    highScores: {
+      ...progress.highScores,
+      [gameName]: Math.max(progress.highScores[gameName] || 0, score)
+    }
+  };
+
+  return updatedProgress;
+}
+
+/**
  * Get level from XP
  */
 export function getLevelFromXP(xp) {
   return Math.floor(xp / 100) + 1;
+}
+
+/**
+ * Check if all medium level games are completed
+ */
+export function checkMediumLevelCompletion(progress) {
+  const mediumGames = ['investment-garden', 'scam-detective'];
+  const completedMediumGames = mediumGames.filter(gameId => progress.gamesCompleted?.includes(gameId));
+  
+  return {
+    allCompleted: completedMediumGames.length === mediumGames.length,
+    completedCount: completedMediumGames.length,
+    totalCount: mediumGames.length
+  };
+}
+
+/**
+ * Award bonus XP for completing all medium level games
+ */
+export function awardMediumLevelBonus(progress) {
+  const completion = checkMediumLevelCompletion(progress);
+  if (completion.allCompleted && !progress.bonuses?.mediumLevelCompleted) {
+    const bonusXP = 50;
+    const updatedProgress = {
+      ...progress,
+      xp: progress.xp + bonusXP,
+      bonuses: {
+        ...progress.bonuses,
+        mediumLevelCompleted: true
+      },
+      gamesCompleted: [...(progress.gamesCompleted || []), 'medium-level-bonus']
+    };
+    
+    return updatedProgress;
+  }
+  return progress;
 }
 
 /**

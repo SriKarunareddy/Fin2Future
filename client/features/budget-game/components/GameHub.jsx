@@ -6,9 +6,10 @@ import NeedsVsWantsSwipe from './games/basic/NeedsVsWantsSwipe';
 import FlashFinanceLightning from './games/basic/FlashFinanceLightning';
 import SavingsJarBuilder from './games/basic/SavingsJarBuilder';
 import InvestmentGarden from './games/medium/InvestmentGarden';
+import ScamDetective from './games/medium/ScamDetective';
 import WealthBuilder from './games/advanced/WealthBuilder';
 import ResultScreen from './ResultScreen';
-import { getPlayerProgress, savePlayerProgress } from '../utils/progressManager';
+import { getPlayerProgress, savePlayerProgress, awardGameXP, checkMediumLevelCompletion, awardMediumLevelBonus } from '../utils/progressManager';
 
 /**
  * GameHub - Main game orchestrator
@@ -44,22 +45,33 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
 
   const handleGameComplete = (rewards) => {
     if (rewards && rewards.type === 'financial') {
-      // convert financial result into progress rewards
-      const xpGain = rewards.won ? 50 : 20;
-      const coinsGain = Math.max(0, Math.floor(rewards.netWorth / 1000));
+      // Award XP for game completion
+      const difficulty = selectedLevel === 'Basic' ? 'Basic' : 
+                      selectedLevel === 'Medium' ? 'Medium' : 'Advanced';
+      
+      const updatedProgress = awardGameXP(playerProgress, selectedGame, difficulty, rewards.score, rewards.perfect);
+      
+      // Check if medium level is completed and award bonus
+      if (selectedLevel === 'Medium') {
+        const finalProgress = awardMediumLevelBonus(updatedProgress);
+        setPlayerProgress(finalProgress);
+        savePlayerProgress(userId, finalProgress);
+      } else {
+        setPlayerProgress(updatedProgress);
+        savePlayerProgress(userId, updatedProgress);
+      }
+      
+      setGameResults(rewards);
+      setCurrentView('results');
+    } else if (rewards && rewards.type === 'realtime') {
+      // Real-time XP updates during gameplay
       const updatedProgress = {
         ...playerProgress,
-        xp: (playerProgress?.xp || 0) + xpGain,
-        coins: (playerProgress?.coins || 0) + coinsGain,
-        badges: rewards.won
-          ? [...(playerProgress?.badges || []), { name: 'Life Builder', icon: '🏗️' }]
-          : [...(playerProgress?.badges || [])]
+        xp: Math.max(0, playerProgress.xp + rewards.xpChange),
+        coins: Math.max(0, playerProgress.coins + rewards.coinChange)
       };
       setPlayerProgress(updatedProgress);
       savePlayerProgress(userId, updatedProgress);
-
-      setGameResults(rewards);
-      setCurrentView('results');
     } else {
       // existing quiz or other game rewards
       const updatedProgress = {
@@ -136,7 +148,8 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
     const gameProps = {
       onComplete: handleGameComplete,
       onBack: handleBackToGames,
-      playerProgress
+      playerProgress,
+      onRealtimeUpdate: handleGameComplete
     };
 
     switch (selectedGame) {
@@ -153,6 +166,8 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       // Medium Level Games
       case 'investment-garden':
         return <InvestmentGarden {...gameProps} />;
+      case 'scam-detective':
+        return <ScamDetective {...gameProps} />;
 
       // Advanced Level Games
       case 'wealth-builder':
