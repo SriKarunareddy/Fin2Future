@@ -7,7 +7,7 @@ import FlashFinanceLightning from './games/basic/FlashFinanceLightning';
 import SavingsJarBuilder from './games/basic/SavingsJarBuilder';
 import InvestmentGarden from './games/medium/InvestmentGarden';
 import ScamDetective from './games/medium/ScamDetective';
-import WealthBuilder from './games/advanced/WealthBuilder';
+import NiftyTraderChallenge from './games/advanced/NiftyTraderChallenge';
 import ResultScreen from './ResultScreen';
 import { getPlayerProgress, savePlayerProgress, awardGameXP, checkMediumLevelCompletion, awardMediumLevelBonus } from '../utils/progressManager';
 
@@ -170,14 +170,8 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
         return <ScamDetective {...gameProps} />;
 
       // Advanced Level Games
-      case 'wealth-builder':
-        return <WealthBuilder {...gameProps} />;
-      case 'market-crash':
-        return <ComingSoon gameName="Market Crash Mode" />;
-      case 'business-tycoon':
-        return <ComingSoon gameName="Mini Business Tycoon" />;
-      case 'master-tournament':
-        return <ComingSoon gameName="Financial Master Tournament" />;
+      case 'nifty-trader':
+        return <NiftyTraderChallenge {...gameProps} />;
 
       default:
         return <ComingSoon gameName="Unknown Game" />;

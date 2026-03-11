@@ -70,40 +70,13 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
     ],
     Advanced: [
       {
-        id: 'wealth-builder',
-        name: '5-Year Wealth Builder',
-        description: 'Build long-term wealth strategically',
-        icon: '💎',
-        duration: '5 years',
+        id: 'nifty-trader',
+        name: 'Nifty Trader Challenge',
+        description: 'Predict market movements based on economic news',
+        icon: '📈',
+        duration: '10 rounds',
         difficulty: 'Hard',
-        color: 'from-blue-700 to-indigo-900'
-      },
-      {
-        id: 'market-crash',
-        name: 'Market Crash Mode',
-        description: 'Survive financial crisis scenarios',
-        icon: '📉',
-        duration: '10 events',
-        difficulty: 'Hard',
-        color: 'from-indigo-800 to-blue-700'
-      },
-      {
-        id: 'business-tycoon',
-        name: 'Mini Business Tycoon',
-        description: 'Manage your own business empire',
-        icon: '🏢',
-        duration: '12 months',
-        difficulty: 'Hard',
-        color: 'from-blue-800 to-purple-900'
-      },
-      {
-        id: 'master-tournament',
-        name: 'Financial Master Tournament',
-        description: 'Ultimate financial challenge',
-        icon: '🏆',
-        duration: '20 minutes',
-        difficulty: 'Expert',
-        color: 'from-purple-900 to-blue-900'
+        color: 'from-blue-600 to-cyan-600'
       }
     ]
   };
