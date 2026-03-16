@@ -4,10 +4,11 @@
  * Handles HTTP requests for quiz operations.
  */
 
-const { getQuestionsWithoutAnswers } = require('../data/questions');
-const { calculateScore } = require('../services/scoring.service');
-const { assignLevel } = require('../services/level-assignment.service');
-const { saveQuizResults, getQuizResults } = require('../services/user-profile.service');
+import { getQuestionsWithoutAnswers } from '../data/questions.js';
+import User from '../../../models/User.js';
+import { calculateScore } from '../services/scoring.service.js';
+import { assignLevel } from '../services/level-assignment.service.js';
+import { saveQuizResults, getQuizResults } from '../services/user-profile.service.js';
 
 /**
  * GET /api/quiz/questions
@@ -143,7 +144,6 @@ async function getAnalytics(req, res, next) {
     if (!userId) {
       return res.status(400).json({ success: false, error: 'userId is required' });
     }
-    const User = require('../../../models/User');
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
@@ -162,7 +162,7 @@ async function getAnalytics(req, res, next) {
   }
 }
 
-module.exports = {
+export {
   getQuestions,
   submitQuiz,
   getResults,

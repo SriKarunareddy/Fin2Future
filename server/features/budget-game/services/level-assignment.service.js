@@ -65,7 +65,7 @@ function getLevelThresholds() {
   };
 }
 
-module.exports = {
+export {
   assignLevel,
   getLevelThresholds,
   LEVEL_THRESHOLDS

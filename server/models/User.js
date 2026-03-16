@@ -28,6 +28,24 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  budgetGame: {
+    gamesPlayed: { type: Number, default: 0 },
+    score: { type: Number, default: 0 },
+    level: { type: String, default: 'Basic' },
+    results: [{
+      responses: [Object],
+      score: Number,
+      level: String,
+      completedAt: Date
+    }]
+  },
+  learningModules: {
+    modulesCompleted: { type: Number, default: 0 },
+    progress: [{
+      moduleId: String,
+      completedAt: Date
+    }]
   }
 });
 

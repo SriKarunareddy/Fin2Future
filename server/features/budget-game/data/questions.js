@@ -197,7 +197,7 @@ function validateQuestions() {
 // Validate questions on module load
 validateQuestions();
 
-module.exports = {
+export {
   quizQuestions,
   getQuestions,
   getQuestionsWithoutAnswers,

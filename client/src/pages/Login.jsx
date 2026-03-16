@@ -13,9 +13,9 @@ export default function Login({ onLogin }) {
     setError(null);
     try {
       const data = await authApi.login(email, password);
-      // data contains { message, token }
-      const userData = await authApi.me(data.token);
-      onLogin({ ...userData, token: data.token });
+      const token = data.data.token;
+      const userData = await authApi.me(token);
+      onLogin({ ...userData.data, token });
       navigate('/');
     } catch (err) {
       setError(err.message);

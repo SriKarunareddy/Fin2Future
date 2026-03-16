@@ -9,9 +9,9 @@
  * - GET /api/quiz/results/:userId - Retrieve user's previous quiz results
  */
 
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const quizController = require('../controllers/quiz.controller');
+import * as quizController from '../controllers/quiz.controller.js';
 
 /**
  * GET /api/quiz/questions
@@ -93,4 +93,4 @@ router.get('/results/:userId', quizController.getResults);
  */
 router.get('/analytics/:userId', quizController.getAnalytics);
 
-module.exports = router;
+export default router;

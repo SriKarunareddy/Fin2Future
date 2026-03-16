@@ -9,7 +9,7 @@ export default function Dashboard({ user, onLogout }) {
     // Fetch user analytics from backend
     const fetchAnalytics = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/quiz/analytics/${user._id}`);
+        const response = await fetch(`/api/quiz/analytics/${user._id}`);
         const data = await response.json();
         if (data.success) {
           setAnalytics(data.data);

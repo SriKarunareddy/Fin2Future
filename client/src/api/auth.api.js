@@ -5,8 +5,9 @@ const API_BASE_URL = '/api/auth';
 
 async function handleResponse(response) {
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-    throw new Error(error.message || `HTTP error ${response.status}`);
+    const errObj = await response.json().catch(() => ({ message: 'Unknown error' }));
+    const errorMsg = errObj?.error?.message || errObj.message || errObj.error || `HTTP error ${response.status}`;
+    throw new Error(errorMsg);
   }
   return response.json();
 }

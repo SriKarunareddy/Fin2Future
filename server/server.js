@@ -5,6 +5,8 @@ import connectDB from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import lessonRoutes from './routes/lessonRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
+import quizRoutes from './features/budget-game/routes/quiz.routes.js';
+import learningRoutes from './features/learning-modules/routes/learning.routes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -23,6 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/quiz', quizRoutes);
+app.use('/api/learning', learningRoutes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'Financial Literacy API is running' });
+});
 
 // Health check
 app.get('/health', (req, res) => {

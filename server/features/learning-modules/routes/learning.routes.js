@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const learningController = require('../controllers/learning.controller');
+import * as learningController from '../controllers/learning.controller.js';
 
 // Skeleton route for learning modules progress
 router.get('/progress/:userId', learningController.getProgress);
 router.post('/complete', learningController.completeModule);
 
-module.exports = router;
+export default router;

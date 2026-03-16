@@ -1,6 +1,6 @@
-const User = require('../../../models/User');
+import User from '../../../models/User.js';
 
-exports.getProgress = async (req, res, next) => {
+export const getProgress = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
@@ -12,7 +12,7 @@ exports.getProgress = async (req, res, next) => {
   }
 };
 
-exports.completeModule = async (req, res, next) => {
+export const completeModule = async (req, res, next) => {
   try {
     const { userId, moduleId } = req.body;
     const user = await User.findById(userId);

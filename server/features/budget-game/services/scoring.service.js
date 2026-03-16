@@ -5,7 +5,7 @@
  * It validates response format and calculates the total score.
  */
 
-const { getCorrectAnswer } = require('../data/questions');
+import { getCorrectAnswer } from '../data/questions.js';
 
 /**
  * Validate the format of a single response
@@ -188,7 +188,7 @@ function calculateScore(responses) {
   return score;
 }
 
-module.exports = {
+export {
   calculateScore,
   isAnswerCorrect,
   validateResponseFormat,

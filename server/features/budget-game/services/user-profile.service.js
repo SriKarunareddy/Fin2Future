@@ -5,7 +5,7 @@
  * Connects to MongoDB to persist data.
  */
 
-const User = require('../../../models/User');
+import User from '../../../models/User.js';
 
 /**
  * Save quiz results to user profile
@@ -120,7 +120,7 @@ async function getAllProfiles() {
   return await User.find({});
 }
 
-module.exports = {
+export {
   saveQuizResults,
   getQuizResults,
   getUserLevel,

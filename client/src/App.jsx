@@ -27,8 +27,8 @@ function App() {
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
             <Route path="/" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
-            <Route path="/budget-game" element={user ? <BudgetGamePage /> : <Navigate to="/login" />} />
-            <Route path="/learning" element={user ? <LearningDashboard /> : <Navigate to="/login" />} />
+            <Route path="/budget-game" element={user ? <BudgetGamePage userId={user._id} /> : <Navigate to="/login" />} />
+            <Route path="/learning" element={user ? <LearningDashboard userId={user._id} /> : <Navigate to="/login" />} />
             <Route path="/lessons" element={user ? <LessonsPage /> : <Navigate to="/login" />} />
           </Routes>
         </div>
