@@ -1,0 +1,79 @@
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+
+class AuthService {
+  generateToken(userId, role) {
+    return jwt.sign(
+      { userId, role },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '7d' }
+    );
+  }
+
+  async signup(userData) {
+    const existingUser = await User.findOne({ email: userData.email });
+    
+    if (existingUser) {
+      const error = new Error('Email already registered');
+      error.statusCode = 400;
+      throw error;
+    }
+    
+    const user = new User(userData);
+    await user.save();
+    
+    const token = this.generateToken(user._id, user.role);
+    
+    return {
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      token
+    };
+  }
+
+  async login(email, password) {
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      const error = new Error('Invalid email or password');
+      error.statusCode = 401;
+      throw error;
+    }
+    
+    const isPasswordValid = await user.comparePassword(password);
+    
+    if (!isPasswordValid) {
+      const error = new Error('Invalid email or password');
+      error.statusCode = 401;
+      throw error;
+    }
+    
+    const token = this.generateToken(user._id, user.role);
+    
+    return {
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      token
+    };
+  }
+
+  verifyToken(token) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    } catch (error) {
+      const err = new Error('Invalid or expired token');
+      err.statusCode = 401;
+      throw err;
+    }
+  }
+}
+
+export default new AuthService();
