@@ -5,7 +5,7 @@
 **The application is ALREADY RUNNING!**
 
 - **Frontend**: http://localhost:3000
-- **Backend**: http://localhost:5000
+- **Backend**: http://localhost:4000
 
 Just open your browser and go to **http://localhost:3000**
 

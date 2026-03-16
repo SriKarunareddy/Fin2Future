@@ -1,63 +1,81 @@
 import { useState, useEffect } from 'react';
-import Quiz from '../features/budget-game/components/Quiz';
-import GameHub from '../features/budget-game/components/GameHub';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
-
-// global error state collector
-
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import BudgetGamePage from './pages/BudgetGamePage';
+import authApi from './api/auth.api';
 
 function App() {
-  const [view, setView] = useState('quiz'); // 'quiz' or 'games'
-  const [userLevel, setUserLevel] = useState('Basic');
-  const [userId] = useState('demo-user-123');
-  const [jsError, setJsError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // try to restore session
   useEffect(() => {
-    window.onerror = (message, source, lineno, colno, error) => {
-      setJsError(message || (error && error.message));
-    };
-    window.onunhandledrejection = (evt) => {
-      setJsError(evt.reason ? evt.reason.message || evt.reason : String(evt));
-    };
+    const token = localStorage.getItem('token');
+    if (token) {
+      authApi.me(token)
+        .then((data) => {
+          setUser({ ...data, token });
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-
-  const handleQuizComplete = (level) => {
-    setUserLevel(level);
-    // Auto-navigate to games after quiz
-    setTimeout(() => {
-      setView('games');
-    }, 2000);
+  const handleAuth = (token) => {
+    localStorage.setItem('token', token);
+    authApi.me(token).then((data) => setUser({ ...data, token }));
   };
 
-  // Listen for navigation
-  useEffect(() => {
-    const handleNavigation = () => {
-      const path = window.location.pathname;
-      if (path === '/games') {
-        setView('games');
-      } else {
-        setView('quiz');
-      }
-    };
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
 
-    window.addEventListener('popstate', handleNavigation);
-    handleNavigation();
-
-    return () => window.removeEventListener('popstate', handleNavigation);
-  }, []);
+  if (loading) {
+    return <div className="text-center mt-20">Loading…</div>;
+  }
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-200 antialiased">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          {view === 'quiz' ? (
-            <Quiz userId={userId} onComplete={handleQuizComplete} />
-          ) : (
-            <GameHub userLevel={userLevel} userId={userId} />
-          )}
-        </div>
-      </div>
+      <Router>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              user ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleAuth} />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              user ? <Navigate to="/dashboard" replace /> : <Signup onSignup={handleAuth} />
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              user ? <Dashboard user={user} onLogout={logout} /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/budget-game/*"
+            element={
+              user ? <BudgetGamePage userId={user._id} /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/"
+            element={<Navigate to={user ? '/dashboard' : '/login'} replace />}
+          />
+        </Routes>
+      </Router>
     </ErrorBoundary>
   );
 }

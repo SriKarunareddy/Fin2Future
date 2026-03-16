@@ -4,9 +4,13 @@
  * Main entry point for the backend API server.
  */
 
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
 const quizRoutes = require('./features/budget-game/routes/quiz.routes');
+const authRoutes = require('../routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -16,7 +20,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Connect to MongoDB for auth
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected for auth'))
+    .catch(err => console.error('MongoDB connection error:', err));
+} else {
+  console.warn('MONGO_URI not set; auth routes will fail if used');
+}
+
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/quiz', quizRoutes);
 
 // Health check endpoint

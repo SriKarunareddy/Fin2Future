@@ -1,18 +1,28 @@
 {
-<<<<<<< HEAD
   "name": "fin2future",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Financial Literacy Quiz Application",
+  "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server/index.js",
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && npm start",
+    "build": "cd client && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SriKarunareddy/Fin2Future.git"
   },
-  "keywords": [],
+  "keywords": [
+    "quiz",
+    "financial-literacy",
+    "react",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -26,22 +36,7 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.2.3"
+    "mongoose": "^9.2.3",
+    "react-router-dom": "^6.30.3"
   }
-=======
-  "name": "financial-literacy-quiz",
-  "version": "1.0.0",
-  "description": "Financial Literacy Quiz Application",
-  "scripts": {
-    "install:all": "cd client && npm install && cd ../server && npm install",
-    "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && npm run dev",
-    "start:client": "cd client && npm run dev",
-    "start:server": "cd server && npm start",
-    "build": "cd client && npm run build"
-  },
-  "keywords": ["quiz", "financial-literacy", "react", "express"],
-  "author": "",
-  "license": "MIT"
->>>>>>> a5ac881 (Added basic level games)
 }

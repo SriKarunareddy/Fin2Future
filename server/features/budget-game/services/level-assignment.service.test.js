@@ -82,7 +82,7 @@ describe('Level Assignment Engine Service', () => {
       });
 
       test('should throw error for NaN', () => {
-        expect(() => assignLevel(NaN)).toThrow('Score must be between 0 and 10');
+        expect(() => assignLevel(NaN)).toThrow('Score must be an integer');
       });
     });
   });
