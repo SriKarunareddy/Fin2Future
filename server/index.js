@@ -4,9 +4,13 @@
  * Main entry point for the backend API server.
  */
 
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
 const quizRoutes = require('./features/budget-game/routes/quiz.routes');
+const learningRoutes = require('./features/learning-modules/routes/learning.routes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,7 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/learning', learningRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -55,10 +61,18 @@ app.use((req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📚 Quiz API available at http://localhost:${PORT}/api/quiz`);
-});
+// Connect to MongoDB and start server
+mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/fin2future")
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📚 Quiz API available at http://localhost:${PORT}/api/quiz`);
+      console.log(`🧠 Learning API available at http://localhost:${PORT}/api/learning`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
 
 module.exports = app;

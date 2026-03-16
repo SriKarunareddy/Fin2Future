@@ -3,28 +3,26 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-
-// In-memory user storage (for demo; replace with DB in production)
-const users = new Map();
+const User = require("../models/User");
 
 // Signup
 router.post("/signup", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (users.has(email)) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = {
-            _id: Date.now().toString(), // simple ID
+        const newUser = new User({
             email,
             password: hashedPassword
-        };
+        });
 
-        users.set(email, newUser);
+        await newUser.save();
         res.status(201).json({ message: "Signup successful" });
 
     } catch (error) {
@@ -38,7 +36,7 @@ router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = users.get(email);
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
@@ -68,19 +66,11 @@ router.post("/login", async (req, res) => {
 
 router.get("/me", authMiddleware, async (req, res) => {
     try {
-        // Find user by id
-        let foundUser = null;
-        for (const user of users.values()) {
-            if (user._id === req.user.id) {
-                foundUser = user;
-                break;
-            }
-        }
-        if (!foundUser) {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        const { password, ...userWithoutPassword } = foundUser;
-        res.json(userWithoutPassword);
+        res.json(user);
     } catch (error) {
         res.status(500).json({ message: "Server error" });
     }

@@ -133,8 +133,38 @@ async function getResults(req, res, next) {
   }
 }
 
+/**
+ * GET /api/quiz/analytics/:userId
+ * Retrieve user's gamesPlayed and modulesCompleted
+ */
+async function getAnalytics(req, res, next) {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'userId is required' });
+    }
+    const User = require('../../../models/User');
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    
+    res.json({
+      success: true,
+      data: {
+        gamesPlayed: user.budgetGame.gamesPlayed,
+        modulesCompleted: user.learningModules.modulesCompleted
+      }
+    });
+  } catch (error) {
+    console.error('Error in getAnalytics:', error);
+    next(error);
+  }
+}
+
 module.exports = {
   getQuestions,
   submitQuiz,
-  getResults
+  getResults,
+  getAnalytics
 };

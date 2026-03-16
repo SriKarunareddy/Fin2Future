@@ -86,4 +86,11 @@ router.post('/submit', quizController.submitQuiz);
  */
 router.get('/results/:userId', quizController.getResults);
 
+/**
+ * GET /api/quiz/analytics/:userId
+ * 
+ * Retrieve user's games played and modules completed.
+ */
+router.get('/analytics/:userId', quizController.getAnalytics);
+
 module.exports = router;

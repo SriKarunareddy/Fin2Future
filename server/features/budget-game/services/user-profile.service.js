@@ -2,12 +2,10 @@
  * User Profile Service
  * 
  * Manages user profile data including quiz results.
- * Uses in-memory storage for demo purposes.
- * In production, this would connect to a database.
+ * Connects to MongoDB to persist data.
  */
 
-// In-memory storage (replace with database in production)
-const userProfiles = new Map();
+const User = require('../../../models/User');
 
 /**
  * Save quiz results to user profile
@@ -25,22 +23,25 @@ async function saveQuizResults(userId, results) {
       throw new Error('results object is required');
     }
 
-    // Get existing profile or create new one
-    let profile = userProfiles.get(userId) || {
-      userId,
-      quizResults: null
-    };
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-    // Update quiz results
-    profile.quizResults = {
+    // Update budget game stats
+    user.budgetGame.gamesPlayed += 1;
+    user.budgetGame.score = results.score;
+    user.budgetGame.level = results.level;
+    
+    // Store the specific result
+    user.budgetGame.results.push({
       responses: results.responses,
       score: results.score,
       level: results.level,
       completedAt: results.completedAt
-    };
+    });
 
-    // Save profile
-    userProfiles.set(userId, profile);
+    await user.save();
 
     console.log(`✅ Saved quiz results for user: ${userId}, Score: ${results.score}, Level: ${results.level}`);
   } catch (error) {
@@ -60,13 +61,14 @@ async function getQuizResults(userId) {
       throw new Error('userId is required');
     }
 
-    const profile = userProfiles.get(userId);
+    const user = await User.findById(userId);
     
-    if (!profile || !profile.quizResults) {
+    if (!user || user.budgetGame.results.length === 0) {
       return null;
     }
 
-    return profile.quizResults;
+    // Return most recent result
+    return user.budgetGame.results[user.budgetGame.results.length - 1];
   } catch (error) {
     console.error('Error getting quiz results:', error);
     throw error;
@@ -101,17 +103,21 @@ async function getUserLevel(userId) {
  * Clear all user profiles (for testing)
  * @returns {void}
  */
-function clearAllProfiles() {
-  userProfiles.clear();
-  console.log('🗑️  Cleared all user profiles');
+async function clearAllProfiles() {
+  await User.updateMany({}, {
+    $set: {
+      budgetGame: { score: 0, level: 'Beginner', gamesPlayed: 0, results: [] }
+    }
+  });
+  console.log('🗑️  Cleared all user budgetGame profiles');
 }
 
 /**
  * Get all user profiles (for debugging)
  * @returns {Array} Array of all user profiles
  */
-function getAllProfiles() {
-  return Array.from(userProfiles.values());
+async function getAllProfiles() {
+  return await User.find({});
 }
 
 module.exports = {
