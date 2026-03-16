@@ -3,7 +3,6 @@ import LevelSelection from './games/LevelSelection';
 import GameSelection from './games/GameSelection';
 import SpendSmartSprint from './games/basic/SpendSmartSprint';
 import NeedsVsWantsSwipe from './games/basic/NeedsVsWantsSwipe';
-import FlashFinanceLightning from './games/basic/FlashFinanceLightning';
 import SavingsJarBuilder from './games/basic/SavingsJarBuilder';
 import InvestmentGarden from './games/medium/InvestmentGarden';
 import ScamDetective from './games/medium/ScamDetective';
@@ -157,8 +156,6 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       // Basic Level Games
       case 'spend-smart-sprint':
         return <SpendSmartSprint {...gameProps} />;
-      case 'budget-tetris':
-        return <FlashFinanceLightning {...gameProps} />;
       case 'needs-vs-wants':
         return <NeedsVsWantsSwipe {...gameProps} />;
       case 'savings-jar':

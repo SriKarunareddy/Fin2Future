@@ -14,20 +14,11 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
       {
         id: 'spend-smart-sprint',
         name: 'Spend Smart Sprint',
-        description: 'Make quick decisions: Smart or Wasteful?',
-        icon: '⚡',
-        duration: '30 seconds',
+        description: 'Race against time to make smart spending decisions',
+        icon: '🏃',
+        duration: '2 minutes',
         difficulty: 'Easy',
         color: 'from-blue-600 to-blue-400'
-      },
-      {
-        id: 'budget-tetris',
-        name: 'Flash Finance Lightning',
-        description: 'Ultra-fast quiz with 5-second decisions and streak multipliers',
-        icon: '⚡',
-        duration: '10 questions',
-        difficulty: 'Easy',
-        color: 'from-yellow-500 to-orange-500'
       },
       {
         id: 'needs-vs-wants',
