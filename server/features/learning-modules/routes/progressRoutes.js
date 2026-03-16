@@ -5,7 +5,7 @@ import {
   getUserProgress,
   getProgressStats
 } from '../controllers/progressController.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate } from '../../../middleware/auth.js';
 
 const router = express.Router();
 

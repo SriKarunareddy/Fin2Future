@@ -6,8 +6,11 @@ export default function Dashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch user analytics from backend
     const fetchAnalytics = async () => {
+      if (!user || !user._id) {
+        setLoading(false);
+        return;
+      }
       try {
         const response = await fetch(`/api/quiz/analytics/${user._id}`);
         const data = await response.json();
@@ -21,121 +24,77 @@ export default function Dashboard({ user, onLogout }) {
       }
     };
 
-    if (user && user._id) {
-      fetchAnalytics();
-    }
+    fetchAnalytics();
   }, [user]);
 
+  const navItems = [
+    { name: 'Budget Game', to: '/budget-game', icon: '🎮', colorClass: 'hover:shadow-indigo-500/20 bg-indigo-500/20 shadow-indigo-500/10 via-indigo-500', iconBg: 'bg-indigo-500/20', shadowColor: 'shadow-indigo-500/10', viaColor: 'via-indigo-500', desc: 'Test your financial planning skills.' },
+    { name: 'Learning', to: '/learning', icon: '📚', colorClass: 'hover:shadow-emerald-500/20 bg-emerald-500/20 shadow-emerald-500/10 via-emerald-500', iconBg: 'bg-emerald-500/20', shadowColor: 'shadow-emerald-500/10', viaColor: 'via-emerald-500', desc: 'Interactive financial literacy courses.' },
+    { name: 'Books', to: '/books', icon: '📖', colorClass: 'hover:shadow-amber-500/20 bg-amber-500/20 shadow-amber-500/10 via-amber-500', iconBg: 'bg-amber-500/20', shadowColor: 'shadow-amber-500/10', viaColor: 'via-amber-500', desc: 'Curated financial wisdom and guides.' },
+    { name: 'Gov Finance', to: '/gov-finance', icon: '🏛️', colorClass: 'hover:shadow-rose-500/20 bg-rose-500/20 shadow-rose-500/10 via-rose-500', iconBg: 'bg-rose-500/20', shadowColor: 'shadow-rose-500/10', viaColor: 'via-rose-500', desc: 'Understanding government schemes.' },
+    { name: 'Personalized Finance', to: '/personalized-finance', icon: '💎', colorClass: 'hover:shadow-purple-500/20 bg-purple-500/20 shadow-purple-500/10 via-purple-500', iconBg: 'bg-purple-500/20', shadowColor: 'shadow-purple-500/10', viaColor: 'via-purple-500', desc: 'Tailored paths for your goals.' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-slate-100 relative overflow-hidden">
+    <div className="flex-grow flex flex-col items-center p-6 text-slate-100 relative overflow-hidden font-sans">
       {/* Background Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
       <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
-      <div className="z-10 w-full max-w-5xl">
-        <header className="flex flex-col md:flex-row justify-between items-center mb-12 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl">
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <div className="h-16 w-16 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg shadow-indigo-500/30">
-              {user.email.charAt(0).toUpperCase()}
+      <div className="z-10 w-full max-w-6xl py-12">
+        {/* Hero Section */}
+        <section className="mb-16 text-center md:text-left">
+          <h2 className="text-5xl md:text-7xl font-black mb-4 tracking-tighter">
+            Master Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400">FINANCES</span>
+          </h2>
+          <p className="text-xl text-slate-400 max-w-2xl font-medium leading-relaxed">
+            Take control of your future with interactive tools, personalized courses, and real-world simulations designed for your success.
+          </p>
+        </section>
+
+        {/* Analytics if logged in */}
+        {user && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4">
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-xl flex items-center space-x-6 hover:bg-white/10 transition-all group">
+              <div className="p-5 bg-indigo-500/20 text-indigo-400 rounded-2xl group-hover:scale-110 transition-transform">
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mb-1">Total Games</p>
+                <p className="text-4xl font-black text-white">{loading ? '...' : analytics.gamesPlayed}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300">
-                Welcome back,
-              </h1>
-              <p className="text-slate-400 font-medium">{user.email}</p>
+            <div className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-xl flex items-center space-x-6 hover:bg-white/10 transition-all group">
+              <div className="p-5 bg-emerald-500/20 text-emerald-400 rounded-2xl group-hover:scale-110 transition-transform">
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+              </div>
+              <div>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mb-1">Modules Done</p>
+                <p className="text-4xl font-black text-white">{loading ? '...' : analytics.modulesCompleted}</p>
+              </div>
             </div>
           </div>
-          <button
-            onClick={onLogout}
-            className="px-6 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-rose-500/20"
-          >
-            Log out
-          </button>
-        </header>
+        )}
 
-        {/* Navigation */}
-        <nav className="flex flex-wrap gap-4 mb-8">
-          <Link
-            to="/"
-            className="px-6 py-3 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/budget-game"
-            className="px-6 py-3 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-          >
-            Budget Game
-          </Link>
-          <Link
-            to="/learning"
-            className="px-6 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-          >
-            Learning
-          </Link>
-          <Link
-            to="/lessons"
-            className="px-6 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-          >
-            Lessons
-          </Link>
-        </nav>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Analytics Column (Spans 1 col) */}
-          <div className="space-y-6">
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl flex flex-col items-start transition-all hover:-translate-y-1 hover:border-indigo-500/50 hover:shadow-indigo-500/20 group">
-              <div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-xl mb-4 group-hover:bg-indigo-500/30 transition-colors">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
-              <p className="text-slate-400 font-medium mb-1">Games Played</p>
-              <h2 className="text-4xl font-black text-white">
-                {loading ? <span className="animate-pulse text-slate-600">...</span> : analytics.gamesPlayed}
-              </h2>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl flex flex-col items-start transition-all hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-emerald-500/20 group">
-              <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl mb-4 group-hover:bg-emerald-500/30 transition-colors">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
-              </div>
-              <p className="text-slate-400 font-medium mb-1">Modules Completed</p>
-              <h2 className="text-4xl font-black text-white">
-                {loading ? <span className="animate-pulse text-slate-600">...</span> : analytics.modulesCompleted}
-              </h2>
-            </div>
-          </div>
-
-          {/* Action Column (Spans 2 cols) */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {navItems.map((item) => (
             <Link
-              to="/budget-game"
-              className="group relative overflow-hidden bg-gradient-to-br from-indigo-900 to-indigo-950 rounded-3xl p-8 border border-indigo-500/30 shadow-2xl transition-all duration-300 hover:shadow-indigo-500/40 hover:-translate-y-2 flex flex-col justify-end min-h-[250px]"
+              key={item.name}
+              to={user ? item.to : '/login'}
+              className={`group relative overflow-hidden bg-white/5 backdrop-blur-md rounded-[2.5rem] p-10 border border-white/10 shadow-2xl transition-all duration-500 hover:-translate-y-3 flex flex-col justify-end min-h-[300px] hover:bg-white/[0.08] ${item.colorClass.split(' ')[0]}`}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="absolute top-6 right-6 p-4 bg-indigo-500/20 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform">
-                <span className="text-3xl">🎮</span>
+              <div className={`absolute top-10 right-10 w-20 h-20 ${item.iconBg} rounded-[2rem] flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 text-4xl shadow-lg ${item.shadowColor}`}>
+                {item.icon}
               </div>
               <div className="z-10">
-                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 mb-2">Budget Game</h3>
-                <p className="text-indigo-200/80 font-medium group-hover:text-white transition-colors">Test your financial planning skills in our interactive simulation.</p>
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tight group-hover:translate-x-1 transition-transform">{item.name}</h3>
+                <p className="text-slate-400 font-medium group-hover:text-slate-200 transition-colors">{item.desc}</p>
               </div>
+              <div className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent ${item.viaColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity`}></div>
             </Link>
-
-            <Link
-              to="/learning"
-              className="group relative overflow-hidden bg-gradient-to-br from-emerald-900 to-emerald-950 rounded-3xl p-8 border border-emerald-500/30 shadow-2xl transition-all duration-300 hover:shadow-emerald-500/40 hover:-translate-y-2 flex flex-col justify-end min-h-[250px]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <div className="absolute top-6 right-6 p-4 bg-emerald-500/20 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform">
-                <span className="text-3xl">📚</span>
-              </div>
-              <div className="z-10">
-                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 mb-2">Learning Modules</h3>
-                <p className="text-emerald-200/80 font-medium group-hover:text-white transition-colors">Expand your knowledge with interactive financial courses.</p>
-              </div>
-            </Link>
-          </div>
+          ))}
         </div>
       </div>
     </div>

@@ -21,26 +21,16 @@ export default function LearningDashboard() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-12">
       {/* Header */}
-      <div className="mb-8">
-        <Link to="/" className="inline-flex items-center text-emerald-500 hover:text-emerald-400 font-semibold mb-6 transition-colors bg-emerald-900/40 px-4 py-2 rounded-lg border border-emerald-500/30">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-          Back to Dashboard
-        </Link>
+      <div className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600 mb-2">
-              Learning Dashboard
+            <h1 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600 mb-2 tracking-tighter">
+              Learning Hub
             </h1>
-            <p className="text-emerald-200/80">Track your financial education progress</p>
+            <p className="text-emerald-200/80 font-medium">Elevate your financial intelligence with our interactive courses.</p>
           </div>
-          <Link
-            to="/lessons"
-            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            Lessons
-          </Link>
         </div>
       </div>
 

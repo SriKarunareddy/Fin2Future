@@ -1,5 +1,5 @@
-import UserProgress from '../models/UserProgress.js';
-import Lesson from '../models/Lesson.js';
+import UserProgress from '../../../models/UserProgress.js';
+import Lesson from '../../../models/Lesson.js';
 import lessonService from './lessonService.js';
 
 class ProgressService {

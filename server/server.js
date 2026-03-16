@@ -1,15 +1,20 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
-import authRoutes from './routes/authRoutes.js';
-import lessonRoutes from './routes/lessonRoutes.js';
-import progressRoutes from './routes/progressRoutes.js';
+import authRoutes from './features/auth/routes/authRoutes.js';
+import lessonRoutes from './features/learning-modules/routes/lessonRoutes.js';
+import progressRoutes from './features/learning-modules/routes/progressRoutes.js';
 import quizRoutes from './features/budget-game/routes/quiz.routes.js';
 import learningRoutes from './features/learning-modules/routes/learning.routes.js';
 import errorHandler from './middleware/errorHandler.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 

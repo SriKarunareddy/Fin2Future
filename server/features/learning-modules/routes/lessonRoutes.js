@@ -7,7 +7,7 @@ import {
   updateLesson,
   deleteLesson
 } from '../controllers/lessonController.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../../middleware/auth.js';
 
 const router = express.Router();
 
