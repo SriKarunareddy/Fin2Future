@@ -10,7 +10,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const quizRoutes = require('./features/budget-game/routes/quiz.routes');
-const authRoutes = require('../routes/authRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;

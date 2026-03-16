@@ -28,7 +28,11 @@ async function saveQuizResults(userId, results) {
     // Get existing profile or create new one
     let profile = userProfiles.get(userId) || {
       userId,
-      quizResults: null
+      quizResults: null,
+      analytics: {
+        gamesPlayed: 0,
+        modulesCompleted: 0
+      }
     };
 
     // Update quiz results
@@ -39,10 +43,16 @@ async function saveQuizResults(userId, results) {
       completedAt: results.completedAt
     };
 
+    // Update analytics
+    if (!profile.analytics) {
+      profile.analytics = { gamesPlayed: 0, modulesCompleted: 0 };
+    }
+    profile.analytics.gamesPlayed += 1;
+
     // Save profile
     userProfiles.set(userId, profile);
 
-    console.log(`✅ Saved quiz results for user: ${userId}, Score: ${results.score}, Level: ${results.level}`);
+    console.log(`✅ Saved quiz results for user: ${userId}, Score: ${results.score}, Level: ${results.level}. Games Played: ${profile.analytics.gamesPlayed}`);
   } catch (error) {
     console.error('Error saving quiz results:', error);
     throw error;
@@ -61,7 +71,7 @@ async function getQuizResults(userId) {
     }
 
     const profile = userProfiles.get(userId);
-    
+
     if (!profile || !profile.quizResults) {
       return null;
     }
@@ -85,7 +95,7 @@ async function getUserLevel(userId) {
     }
 
     const results = await getQuizResults(userId);
-    
+
     if (!results) {
       return null;
     }
@@ -114,10 +124,35 @@ function getAllProfiles() {
   return Array.from(userProfiles.values());
 }
 
+/**
+ * Get user's analytics (games played, modules completed)
+ * @param {string} userId - User identifier
+ * @returns {Promise<Object>} Analytics object
+ */
+async function getAnalytics(userId) {
+  try {
+    if (!userId) {
+      throw new Error('userId is required');
+    }
+
+    const profile = userProfiles.get(userId);
+
+    if (!profile || !profile.analytics) {
+      return { gamesPlayed: 0, modulesCompleted: 0 };
+    }
+
+    return profile.analytics;
+  } catch (error) {
+    console.error('Error getting analytics:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   saveQuizResults,
   getQuizResults,
   getUserLevel,
+  getAnalytics,
   clearAllProfiles,
   getAllProfiles
 };
