@@ -9,6 +9,7 @@ import lessonRoutes from './features/learning-modules/routes/lessonRoutes.js';
 import progressRoutes from './features/learning-modules/routes/progressRoutes.js';
 import quizRoutes from './features/budget-game/routes/quiz.routes.js';
 import learningRoutes from './features/learning-modules/routes/learning.routes.js';
+import financeRoutes from './features/personalized-finance/routes/finance.routes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,7 @@ app.use('/api/lessons', lessonRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/learning', learningRoutes);
+app.use('/api/finance', financeRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
