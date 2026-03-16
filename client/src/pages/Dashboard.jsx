@@ -54,6 +54,34 @@ export default function Dashboard({ user, onLogout }) {
           </button>
         </header>
 
+        {/* Navigation */}
+        <nav className="flex flex-wrap gap-4 mb-8">
+          <Link
+            to="/"
+            className="px-6 py-3 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/budget-game"
+            className="px-6 py-3 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+          >
+            Budget Game
+          </Link>
+          <Link
+            to="/learning"
+            className="px-6 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+          >
+            Learning
+          </Link>
+          <Link
+            to="/lessons"
+            className="px-6 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+          >
+            Lessons
+          </Link>
+        </nav>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Analytics Column (Spans 1 col) */}
           <div className="space-y-6">
@@ -95,7 +123,7 @@ export default function Dashboard({ user, onLogout }) {
             </Link>
 
             <Link
-              to="#"
+              to="/learning"
               className="group relative overflow-hidden bg-gradient-to-br from-emerald-900 to-emerald-950 rounded-3xl p-8 border border-emerald-500/30 shadow-2xl transition-all duration-300 hover:shadow-emerald-500/40 hover:-translate-y-2 flex flex-col justify-end min-h-[250px]"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>

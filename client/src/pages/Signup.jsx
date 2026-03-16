@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authApi from '../api/auth.api';
 
-export default function Signup({ onSignup }) {
+export default function Signup({ onLogin }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -12,11 +13,12 @@ export default function Signup({ onSignup }) {
     e.preventDefault();
     setError(null);
     try {
-      await authApi.signup(email, password);
+      await authApi.signup(email, password, name);
       // after signup, auto-login
       const loginData = await authApi.login(email, password);
-      onSignup(loginData.token);
-      navigate('/dashboard');
+      const userData = await authApi.me(loginData.data.token);
+      onLogin({ ...userData.data, token: loginData.data.token });
+      navigate('/');
     } catch (err) {
       setError(err.message);
     }
@@ -27,6 +29,16 @@ export default function Signup({ onSignup }) {
       <h2 className="text-2xl font-bold mb-4 text-center">Create Account</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1">Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full p-2 rounded bg-slate-700"
+          />
+        </div>
         <div>
           <label className="block mb-1">Email</label>
           <input

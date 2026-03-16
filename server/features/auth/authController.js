@@ -41,3 +41,22 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+export const me = async (req, res, next) => {
+  try {
+    // req.user is set by authMiddleware
+    const user = await authService.getUserById(req.user.userId);
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

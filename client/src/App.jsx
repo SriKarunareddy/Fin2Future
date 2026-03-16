@@ -1,60 +1,38 @@
-import { useState, useEffect } from 'react';
-import Quiz from '../features/budget-game/components/Quiz';
-import GameHub from '../features/budget-game/components/GameHub';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import Dashboard from './pages/Dashboard';
+import BudgetGamePage from './pages/BudgetGamePage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import LearningDashboard from '../features/learning/components/LearningDashboard';
+import LessonsPage from '../features/learning/components/LessonsPage';
 import ErrorBoundary from './ErrorBoundary';
 
-// global error state collector
 function App() {
-  const [view, setView] = useState('quiz'); // 'quiz' or 'games'
-  const [userLevel, setUserLevel] = useState('Basic');
-  const [userId] = useState('demo-user-123');
-  const [jsError, setJsError] = useState(null);
+  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    window.onerror = (message, source, lineno, colno, error) => {
-      setJsError(message || (error && error.message));
-    };
-    window.onunhandledrejection = (evt) => {
-      setJsError(evt.reason ? evt.reason.message || evt.reason : String(evt));
-    };
-  }, []);
-
-  const handleQuizComplete = (level) => {
-    setUserLevel(level);
-    // Auto-navigate to games after quiz
-    setTimeout(() => {
-      setView('games');
-    }, 2000);
+  const handleLogin = (userData) => {
+    setUser(userData);
   };
 
-  // Listen for navigation
-  useEffect(() => {
-    const handleNavigation = () => {
-      const path = window.location.pathname;
-      if (path === '/games') {
-        setView('games');
-      } else {
-        setView('quiz');
-      }
-    };
-
-    window.addEventListener('popstate', handleNavigation);
-    handleNavigation();
-
-    return () => window.removeEventListener('popstate', handleNavigation);
-  }, []);
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-200 antialiased">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          {view === 'quiz' ? (
-            <Quiz userId={userId} onComplete={handleQuizComplete} />
-          ) : (
-            <GameHub userLevel={userLevel} userId={userId} />
-          )}
+      <Router>
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white antialiased">
+          <Routes>
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
+            <Route path="/" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
+            <Route path="/budget-game" element={user ? <BudgetGamePage /> : <Navigate to="/login" />} />
+            <Route path="/learning" element={user ? <LearningDashboard /> : <Navigate to="/login" />} />
+            <Route path="/lessons" element={user ? <LessonsPage /> : <Navigate to="/login" />} />
+          </Routes>
         </div>
-      </div>
+      </Router>
     </ErrorBoundary>
   );
 }

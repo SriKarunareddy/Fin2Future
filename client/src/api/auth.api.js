@@ -12,11 +12,11 @@ async function handleResponse(response) {
 }
 
 export const authApi = {
-  async signup(email, password) {
+  async signup(email, password, name) {
     const res = await fetch(`${API_BASE_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, name })
     });
     return handleResponse(res);
   },
