@@ -77,6 +77,15 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
         duration: '10 rounds',
         difficulty: 'Hard',
         color: 'from-blue-600 to-cyan-600'
+      },
+      {
+        id: 'candlestick-master',
+        name: 'Candlestick Master',
+        description: 'Learn to read stock chart patterns and predict price movements',
+        icon: '�',
+        duration: '10 rounds',
+        difficulty: 'Hard',
+        color: 'from-purple-600 to-pink-600'
       }
     ]
   };

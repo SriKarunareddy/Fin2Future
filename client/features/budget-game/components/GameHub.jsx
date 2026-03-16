@@ -8,6 +8,7 @@ import SavingsJarBuilder from './games/basic/SavingsJarBuilder';
 import InvestmentGarden from './games/medium/InvestmentGarden';
 import ScamDetective from './games/medium/ScamDetective';
 import NiftyTraderChallenge from './games/advanced/NiftyTraderChallenge';
+import CandlestickMaster from './games/advanced/CandlestickMaster';
 import ResultScreen from './ResultScreen';
 import { getPlayerProgress, savePlayerProgress, awardGameXP, checkMediumLevelCompletion, awardMediumLevelBonus } from '../utils/progressManager';
 
@@ -172,6 +173,8 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       // Advanced Level Games
       case 'nifty-trader':
         return <NiftyTraderChallenge {...gameProps} />;
+      case 'candlestick-master':
+        return <CandlestickMaster {...gameProps} />;
 
       default:
         return <ComingSoon gameName="Unknown Game" />;
