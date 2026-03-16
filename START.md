@@ -24,7 +24,7 @@ npm install
 
 ### Step 2: Start the Application
 
-**Terminal 1 - Start Backend Server (Port 4000):**
+**Terminal 1 - Start Backend Server (Port 5000):**
 ```bash
 cd server
 npm start
@@ -32,8 +32,8 @@ npm start
 
 You should see:
 ```
-🚀 Server running on http://localhost:4000
-📚 Quiz API available at http://localhost:4000/api/quiz
+🚀 Server running on http://localhost:5000
+📚 Quiz API available at http://localhost:5000/api/quiz
 ```
 
 **Terminal 2 - Start Frontend (Port 3000):**
@@ -89,7 +89,7 @@ server: {
 }
 ```
 
-**For Server (Port 4000):**
+**For Server (Port 5000):**
 Edit `server/index.js` and change:
 ```javascript
 const PORT = process.env.PORT || 5001;  // Change to any available port
@@ -98,7 +98,7 @@ const PORT = process.env.PORT || 5001;  // Change to any available port
 ### API Connection Issues
 
 Make sure:
-1. Backend server is running on port 4000
+1. Backend server is running on port 5000
 2. Frontend proxy is configured correctly in `client/vite.config.js`
 3. Both servers are running simultaneously
 

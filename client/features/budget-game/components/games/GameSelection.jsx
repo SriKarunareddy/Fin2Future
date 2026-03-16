@@ -1,29 +1,24 @@
 import React from 'react';
 import GameModuleLayout from '../shared/GameModuleLayout';
+import { getLevelFromXP } from '../../utils/progressManager';
 
 /**
  * GameSelection - Choose a game within selected level
  */
 const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
+  const currentLevel = playerProgress?.level || getLevelFromXP(playerProgress?.xp || 0);
+  const currentXP = playerProgress?.xp || 0;
+  const maxXP = (currentLevel * 100);
   const games = {
     Basic: [
       {
         id: 'spend-smart-sprint',
         name: 'Spend Smart Sprint',
-        description: 'Make quick decisions: Smart or Wasteful?',
-        icon: '⚡',
-        duration: '30 seconds',
+        description: 'Race against time to make smart spending decisions',
+        icon: '🏃',
+        duration: '2 minutes',
         difficulty: 'Easy',
         color: 'from-blue-600 to-blue-400'
-      },
-      {
-        id: 'budget-tetris',
-        name: 'Flash Finance Lightning',
-        description: 'Ultra-fast quiz with 5-second decisions and streak multipliers',
-        icon: '⚡',
-        duration: '10 questions',
-        difficulty: 'Easy',
-        color: 'from-yellow-500 to-orange-500'
       },
       {
         id: 'needs-vs-wants',
@@ -53,44 +48,35 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
         duration: '3 rounds',
         difficulty: 'Medium',
         color: 'from-green-600 to-emerald-600'
+      },
+      {
+        id: 'scam-detective',
+        name: 'Scam Detective',
+        description: 'Identify and avoid financial scams in realistic scenarios',
+        icon: '🕵️',
+        duration: '7 scenarios',
+        difficulty: 'Medium',
+        color: 'from-purple-600 to-indigo-600'
       }
     ],
     Advanced: [
       {
-        id: 'wealth-builder',
-        name: '5-Year Wealth Builder',
-        description: 'Build long-term wealth strategically',
-        icon: '💎',
-        duration: '5 years',
+        id: 'nifty-trader',
+        name: 'Nifty Trader Challenge',
+        description: 'Predict market movements based on economic news',
+        icon: '📈',
+        duration: '10 rounds',
         difficulty: 'Hard',
-        color: 'from-blue-700 to-indigo-900'
+        color: 'from-blue-600 to-cyan-600'
       },
       {
-        id: 'market-crash',
-        name: 'Market Crash Mode',
-        description: 'Survive financial crisis scenarios',
-        icon: '📉',
-        duration: '10 events',
+        id: 'candlestick-master',
+        name: 'Candlestick Master',
+        description: 'Learn to read stock chart patterns and predict price movements',
+        icon: '�',
+        duration: '10 rounds',
         difficulty: 'Hard',
-        color: 'from-indigo-800 to-blue-700'
-      },
-      {
-        id: 'business-tycoon',
-        name: 'Mini Business Tycoon',
-        description: 'Manage your own business empire',
-        icon: '🏢',
-        duration: '12 months',
-        difficulty: 'Hard',
-        color: 'from-blue-800 to-purple-900'
-      },
-      {
-        id: 'master-tournament',
-        name: 'Financial Master Tournament',
-        description: 'Ultimate financial challenge',
-        icon: '🏆',
-        duration: '20 minutes',
-        difficulty: 'Expert',
-        color: 'from-purple-900 to-blue-900'
+        color: 'from-purple-600 to-pink-600'
       }
     ]
   };
@@ -106,11 +92,11 @@ const GameSelection = ({ level, playerProgress, onSelectGame, onBack }) => {
   return (
     <GameModuleLayout
       title={`${level} Games`}
-      level={level}
-      currentXP={playerProgress?.xp || 0}
-      maxXP={playerProgress?.xpToNextLevel || 1000}
+      level={currentLevel}
+      currentXP={currentXP}
+      maxXP={maxXP}
       coins={playerProgress?.coins || 0}
-      streak={playerProgress?.streak || 0}
+      streak={playerProgress?.streaks?.current || 0}
       onBack={onBack}
     >
       <div className="max-w-6xl mx-auto">

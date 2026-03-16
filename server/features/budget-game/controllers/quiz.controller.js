@@ -7,7 +7,7 @@
 const { getQuestionsWithoutAnswers } = require('../data/questions');
 const { calculateScore } = require('../services/scoring.service');
 const { assignLevel } = require('../services/level-assignment.service');
-const { saveQuizResults, getQuizResults, getAnalytics } = require('../services/user-profile.service');
+const { saveQuizResults, getQuizResults } = require('../services/user-profile.service');
 
 /**
  * GET /api/quiz/questions
@@ -16,7 +16,7 @@ const { saveQuizResults, getQuizResults, getAnalytics } = require('../services/u
 async function getQuestions(req, res, next) {
   try {
     const questions = getQuestionsWithoutAnswers();
-
+    
     res.json({
       success: true,
       data: questions
@@ -80,11 +80,11 @@ async function submitQuiz(req, res, next) {
     });
   } catch (error) {
     console.error('Error in submitQuiz:', error);
-
+    
     // Handle validation errors
-    if (error.message.includes('Expected 10 responses') ||
-      error.message.includes('Invalid') ||
-      error.message.includes('Duplicate')) {
+    if (error.message.includes('Expected 10 responses') || 
+        error.message.includes('Invalid') ||
+        error.message.includes('Duplicate')) {
       return res.status(400).json({
         success: false,
         error: error.message
@@ -133,36 +133,8 @@ async function getResults(req, res, next) {
   }
 }
 
-/**
- * GET /api/quiz/analytics/:userId
- * Retrieve user's analytics
- */
-async function getAnalyticsHandler(req, res, next) {
-  try {
-    const { userId } = req.params;
-
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'userId is required'
-      });
-    }
-
-    const analytics = await getAnalytics(userId);
-
-    res.json({
-      success: true,
-      data: analytics
-    });
-  } catch (error) {
-    console.error('Error in getAnalyticsHandler:', error);
-    next(error);
-  }
-}
-
 module.exports = {
   getQuestions,
   submitQuiz,
-  getResults,
-  getAnalytics: getAnalyticsHandler
+  getResults
 };

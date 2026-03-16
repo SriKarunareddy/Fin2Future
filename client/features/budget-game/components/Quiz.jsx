@@ -4,11 +4,12 @@ import ProgressIndicator from './ProgressIndicator';
 import ResultScreen from './ResultScreen';
 import { quizApi } from '../api/quiz.api';
 import GameModuleLayout from './shared/GameModuleLayout';
+import { getPlayerProgress, savePlayerProgress, awardGameXP } from '../utils/progressManager';
 
 /**
  * Main Quiz Component
  * 
- * Manages quiz state and orchestrates the quiz flow from start to finish.
+ * Manages quiz state and orchestrates quiz flow from start to finish.
  */
 const Quiz = ({ userId = 'demo-user', onComplete }) => {
   const [questions, setQuestions] = useState([]);
@@ -20,6 +21,13 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
   const [error, setError] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [playerProgress, setPlayerProgress] = useState(null);
+
+  // Load player progress on component mount
+  useEffect(() => {
+    const progress = getPlayerProgress(userId);
+    setPlayerProgress(progress);
+  }, [userId]);
 
   // Fetch questions on component mount
   useEffect(() => {
@@ -80,6 +88,19 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
       setQuizCompleted(true);
       setLoading(false);
       
+      // Award XP only on quiz completion
+      if (playerProgress) {
+        const score = data.data.score || 0;
+        const totalQuestions = questions.length;
+        const correctAnswers = data.data.correctAnswers || 0;
+        const perfect = correctAnswers === totalQuestions;
+        
+        // Use the new awardGameXP function
+        const updatedProgress = awardGameXP(playerProgress, 'quiz', 'Basic', score, perfect);
+        setPlayerProgress(updatedProgress);
+        savePlayerProgress(userId, updatedProgress);
+      }
+      
       // Notify parent of completion with level
       if (onComplete) {
         onComplete(data.data.level);
@@ -105,7 +126,14 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
   // Loading state
   if (loading && questions.length === 0) {
     return (
-      <GameModuleLayout title="Loading Quiz" level={1} currentXP={0} maxXP={100} coins={0} streak={0}>
+      <GameModuleLayout 
+        title="Loading Quiz" 
+        level={playerProgress?.level || 1} 
+        currentXP={playerProgress?.xp || 0} 
+        maxXP={(playerProgress?.level || 1) * 100} 
+        coins={playerProgress?.coins || 0} 
+        streak={playerProgress?.streaks?.current || 0}
+      >
         <div className="flex items-center justify-center p-8">
           <div className="bg-slate-800/70 rounded-3xl p-8 max-w-md w-full shadow-lg ring-1 ring-amber-300/10">
             <div className="flex flex-col items-center space-y-4">
@@ -121,7 +149,14 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
   // Error state
   if (error && questions.length === 0) {
     return (
-      <GameModuleLayout title="Quiz Error" level={1} currentXP={0} maxXP={100} coins={0} streak={0}>
+      <GameModuleLayout 
+        title="Quiz Error" 
+        level={playerProgress?.level || 1} 
+        currentXP={playerProgress?.xp || 0} 
+        maxXP={(playerProgress?.level || 1) * 100} 
+        coins={playerProgress?.coins || 0} 
+        streak={playerProgress?.streaks?.current || 0}
+      >
         <div className="flex items-center justify-center p-8">
           <div className="bg-slate-800/70 rounded-3xl p-8 max-w-md w-full shadow-lg ring-1 ring-red-500/10">
             <div className="flex flex-col items-center space-y-4">
@@ -152,11 +187,15 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
   // Quiz in progress
   const currentQuestion = questions[currentQuestionIndex];
 
-  // simple XP estimate: correct answers not known here, use answered count
-  const estimatedXP = Math.min(responses.length * 10, 100);
-
   return (
-    <GameModuleLayout title="Quiz" level={1} currentXP={estimatedXP} maxXP={100} coins={0} streak={0}>
+    <GameModuleLayout 
+      title="Quiz" 
+      level={playerProgress?.level || 1} 
+      currentXP={playerProgress?.xp || 0} 
+      maxXP={(playerProgress?.level || 1) * 100} 
+      coins={playerProgress?.coins || 0} 
+      streak={playerProgress?.streaks?.current || 0}
+    >
       <div className="w-full max-w-3xl mx-auto space-y-6">
         <ProgressIndicator 
           currentQuestion={currentQuestionIndex + 1}

@@ -86,23 +86,4 @@ router.post('/submit', quizController.submitQuiz);
  */
 router.get('/results/:userId', quizController.getResults);
 
-/**
- * GET /api/quiz/analytics/:userId
- * 
- * Retrieve user's general analytics like games played.
- * 
- * URL Parameters:
- * - userId: The unique identifier of the user
- * 
- * Response:
- * {
- *   success: true,
- *   data: {
- *     gamesPlayed: 1,
- *     modulesCompleted: 0
- *   }
- * }
- */
-router.get('/analytics/:userId', quizController.getAnalytics);
-
 module.exports = router;

@@ -7,15 +7,6 @@
 
 const API_BASE_URL = '/api/quiz';
 
-function authHeaders() {
-  const token = localStorage.getItem('token');
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) {
-    headers.Authorization = token;
-  }
-  return headers;
-}
-
 /**
  * Handle API response and errors
  * @param {Response} response - Fetch API response object
@@ -44,7 +35,9 @@ export const quizApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/questions`, {
         method: 'GET',
-        headers: authHeaders()
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       return await handleResponse(response);
     } catch (error) {
@@ -63,7 +56,9 @@ export const quizApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/submit`, {
         method: 'POST',
-        headers: authHeaders(),
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           userId,
           responses
@@ -85,7 +80,9 @@ export const quizApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/results/${userId}`, {
         method: 'GET',
-        headers: authHeaders()
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       return await handleResponse(response);
     } catch (error) {

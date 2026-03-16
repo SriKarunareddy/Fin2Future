@@ -1,5 +1,6 @@
 import React from 'react';
 import GameModuleLayout from '../shared/GameModuleLayout';
+import { getLevelFromXP, getXPForNextLevel } from '../../utils/progressManager';
 
 /**
  * LevelSelection - Choose difficulty level
@@ -7,7 +8,9 @@ import GameModuleLayout from '../shared/GameModuleLayout';
  * Displays available levels based on user's quiz result
  */
 const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
-  const currentLevel = playerProgress?.level || 1;
+  const currentLevel = playerProgress?.level || getLevelFromXP(playerProgress?.xp || 0);
+  const currentXP = playerProgress?.xp || 0;
+  const maxXP = (currentLevel * 100);
   const levels = [
     {
       id: 'Basic',
@@ -39,7 +42,7 @@ const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
   ];
 
   return (
-    <GameModuleLayout title="Choose Level" level={currentLevel} currentXP={playerProgress?.xp || 0} maxXP={playerProgress?.nextLevelXP || 100} coins={playerProgress?.coins || 0} streak={playerProgress?.streak || 0}>
+    <GameModuleLayout title="Choose Level" level={currentLevel} currentXP={currentXP} maxXP={maxXP} coins={playerProgress?.coins || 0} streak={playerProgress?.streaks?.current || 0}>
       <div className="max-w-6xl mx-auto py-8">
         {/* Header */}
         <div className="text-center mb-8 animate-slideDown text-white">

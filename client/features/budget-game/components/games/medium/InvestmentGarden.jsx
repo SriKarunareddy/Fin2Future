@@ -19,7 +19,7 @@ import AchievementPopup from '../../shared/AchievementPopup';
  * - Educational feedback on investment strategies
  */
 
-const InvestmentGarden = ({ onComplete, onBack, playerProgress = {} }) => {
+const InvestmentGarden = ({ onComplete, onBack, playerProgress = {}, onRealtimeUpdate }) => {
   const [gameState, setGameState] = useState('intro'); // intro, ready, planting, growing, harvestDecision, reinvesting, finalHarvest, gameOver
   const [startingMoney] = useState(10000);
   const [currentCash, setCurrentCash] = useState(10000);
@@ -291,6 +291,15 @@ const InvestmentGarden = ({ onComplete, onBack, playerProgress = {} }) => {
     setScore(finalScore);
     setCurrentXP(prev => prev + finalScore);
     setCoins(prev => prev + Math.floor(finalProfit / 100));
+    
+    // Call real-time XP update
+    if (onRealtimeUpdate) {
+      onRealtimeUpdate({
+        type: 'realtime',
+        xpChange: finalScore,
+        coinChange: Math.floor(finalProfit / 100)
+      });
+    }
     
     // Show achievement
     if (finalProfit > 0) {
