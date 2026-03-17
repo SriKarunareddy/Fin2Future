@@ -32,14 +32,16 @@ const GameModuleLayout = ({
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 flex flex-col min-h-screen px-2 sm:px-4">
-        <div className={`${stickyHeader ? 'sticky top-0' : ''} z-20`}> 
-          <div className="bg-slate-900/80 rounded-b-2xl px-8 py-4">
-            <GameHeader title={title} level={level} onBack={onBack} />
-            <div className="mt-4">
-              <XPBar currentXP={currentXP} maxXP={maxXP} nextLevelXP={nextLevelXP} animated={true} />
+        {stickyHeader && (
+          <div className="sticky top-0 z-20"> 
+            <div className="bg-slate-900/80 rounded-b-2xl px-8 py-4">
+              <GameHeader title={title} level={level} onBack={onBack} />
+              <div className="mt-4">
+                <XPBar currentXP={currentXP} maxXP={maxXP} nextLevelXP={nextLevelXP} animated={true} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <main className="flex-1 mt-6 overflow-y-auto overflow-x-hidden pb-8">
           <div className="animate-fadeIn">

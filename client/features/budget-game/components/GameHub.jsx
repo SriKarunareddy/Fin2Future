@@ -9,6 +9,7 @@ import ScamDetective from './games/medium/ScamDetective';
 import NiftyTraderChallenge from './games/advanced/NiftyTraderChallenge';
 import CandlestickMaster from './games/advanced/CandlestickMaster';
 import ResultScreen from './ResultScreen';
+import Quiz from "./Quiz"; //changed manually
 import { getPlayerProgress, savePlayerProgress, awardGameXP, checkMediumLevelCompletion, awardMediumLevelBonus } from '../utils/progressManager';
 
 /**
@@ -21,7 +22,10 @@ import { getPlayerProgress, savePlayerProgress, awardGameXP, checkMediumLevelCom
  * - Progress tracking
  */
 const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
-  const [currentView, setCurrentView] = useState('level-selection');
+  const [currentView, setCurrentView] = useState(() => {
+  const hasCompletedQuiz = localStorage.getItem("quizCompleted");
+  return hasCompletedQuiz ? 'level-selection' : 'quiz';
+});
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedGame, setSelectedGame] = useState(null);
   const [playerProgress, setPlayerProgress] = useState(null);
@@ -32,6 +36,7 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
     const progress = getPlayerProgress(userId);
     setPlayerProgress(progress);
   }, [userId]);
+
 
   const handleLevelSelect = (level) => {
     setSelectedLevel(level);
@@ -117,8 +122,23 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
     </div>
   );
 
+  if (currentView === 'quiz') {
+  return (
+   <Quiz 
+  userId={userId} 
+  onComplete={() => {
+    console.log("QUIZ COMPLETED"); // debug
+
+    // ✅ FORCE SAVE HERE (THIS WILL RUN)
+    localStorage.setItem("quizCompleted", "true");
+
+    setCurrentView('level-selection');
+  }} 
+/>
+  );
+}
   // Render current view
-  if (currentView === 'level-selection') {
+  if (currentView === 'level-selection') {  //changed manually
     return (
       <LevelSelection
         userLevel={userLevel}
@@ -138,7 +158,7 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       />
     );
   }
-
+  
   if (currentView === 'results') {
     return <ResultScreen results={gameResults} onRetake={handleBackToGames} />;
   }

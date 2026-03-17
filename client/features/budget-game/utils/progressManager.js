@@ -159,6 +159,7 @@ export function updateGameStats(progress, gameName, result) {
 }
 
 /**
+
  * Award XP for game completion
  */
 export function awardGameXP(progress, gameName, difficulty, score, perfect = false) {
@@ -188,6 +189,7 @@ export function awardGameXP(progress, gameName, difficulty, score, perfect = fal
 }
 
 /**
+>>>>>>> feature/budget-game
  * Get level from XP
  */
 export function getLevelFromXP(xp) {
@@ -195,6 +197,7 @@ export function getLevelFromXP(xp) {
 }
 
 /**
+
  * Check if all medium level games are completed
  */
 export function checkMediumLevelCompletion(progress) {
@@ -231,6 +234,7 @@ export function awardMediumLevelBonus(progress) {
 }
 
 /**
+>>>>>>> feature/budget-game
  * Get XP needed for next level
  */
 export function getXPForNextLevel(currentXP) {

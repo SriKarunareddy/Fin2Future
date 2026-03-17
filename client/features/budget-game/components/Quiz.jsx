@@ -63,7 +63,6 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
     const updatedResponses = [...responses, newResponse];
     setResponses(updatedResponses);
 
-    // Wait for animation
     await new Promise(resolve => setTimeout(resolve, 600));
 
     // Check if this was the last question
@@ -81,36 +80,34 @@ const Quiz = ({ userId = 'demo-user', onComplete }) => {
   };
 
   const submitQuiz = async (finalResponses) => {
-    try {
-      setLoading(true);
-      const data = await quizApi.submitQuiz(userId, finalResponses);
-      setResults(data.data);
-      setQuizCompleted(true);
-      setLoading(false);
+  try {
+    setLoading(true);
+    const data = await quizApi.submitQuiz(userId, finalResponses);
+
+    setResults(data.data);
+    setQuizCompleted(true);
+    setLoading(false);
+    
+    if (playerProgress) {
+      const score = data.data.score || 0;
+      const totalQuestions = questions.length;
+      const correctAnswers = data.data.correctAnswers || 0;
+      const perfect = correctAnswers === totalQuestions;
       
-      // Award XP only on quiz completion
-      if (playerProgress) {
-        const score = data.data.score || 0;
-        const totalQuestions = questions.length;
-        const correctAnswers = data.data.correctAnswers || 0;
-        const perfect = correctAnswers === totalQuestions;
-        
-        // Use the new awardGameXP function
-        const updatedProgress = awardGameXP(playerProgress, 'quiz', 'Basic', score, perfect);
-        setPlayerProgress(updatedProgress);
-        savePlayerProgress(userId, updatedProgress);
-      }
-      
-      // Notify parent of completion with level
-      if (onComplete) {
-        onComplete(data.data.level);
-      }
-    } catch (err) {
-      setError('Failed to submit quiz. Please try again.');
-      setLoading(false);
-      console.error('Error submitting quiz:', err);
+      const updatedProgress = awardGameXP(playerProgress, 'quiz', 'Basic', score, perfect);
+      setPlayerProgress(updatedProgress);
+      savePlayerProgress(userId, updatedProgress);
     }
-  };
+    
+    if (onComplete) {
+      onComplete();
+    }
+  } catch (err) {
+    setError('Failed to submit quiz. Please try again.');
+    setLoading(false);
+    console.error('Error submitting quiz:', err);
+  }
+};
 
   const handleRetakeQuiz = () => {
     setQuestions([]);

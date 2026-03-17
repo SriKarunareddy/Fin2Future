@@ -11,6 +11,14 @@ const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
   const currentLevel = playerProgress?.level || getLevelFromXP(playerProgress?.xp || 0);
   const currentXP = playerProgress?.xp || 0;
   const maxXP = (currentLevel * 100);
+
+  // Determine unlocked levels based on user progress
+  const hasPlayedBefore = playerProgress && (
+    playerProgress.xp > 0 || 
+    playerProgress.gamesPlayed && Object.keys(playerProgress.gamesPlayed).length > 0 ||
+    playerProgress.gamesCompleted && playerProgress.gamesCompleted.length > 0
+  );
+
   const levels = [
     {
       id: 'Basic',
@@ -28,7 +36,7 @@ const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
       icon: '⚡',
       color: 'from-purple-500 to-indigo-500',
       bgColor: 'from-slate-800/60 to-slate-800/40',
-      unlocked: ['Medium', 'Advanced'].includes(userLevel)
+      unlocked: true
     },
     {
       id: 'Advanced',
@@ -37,12 +45,12 @@ const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
       icon: '🏆',
       color: 'from-orange-500 to-yellow-500',
       bgColor: 'from-slate-800/60 to-slate-800/40',
-      unlocked: userLevel === 'Advanced'
+      unlocked: true
     }
   ];
 
   return (
-    <GameModuleLayout title="Choose Level" level={currentLevel} currentXP={currentXP} maxXP={maxXP} coins={playerProgress?.coins || 0} streak={playerProgress?.streaks?.current || 0}>
+    <GameModuleLayout title="Choose Level" level={null} currentXP={currentXP} maxXP={maxXP} coins={playerProgress?.coins || 0} streak={playerProgress?.streaks?.current || 0} onBack={null} stickyHeader={false}>
       <div className="max-w-6xl mx-auto py-8">
         {/* Header */}
         <div className="text-center mb-8 animate-slideDown text-white">
