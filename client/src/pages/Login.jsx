@@ -9,6 +9,8 @@ export default function Login({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -17,8 +19,13 @@ export default function Login({ onLogin }) {
       const data = await authApi.login(email, password);
       const token = data.data.token;
       const userData = await authApi.me(token);
+      
+      if (isAdmin && userData.data.role !== 'admin') {
+        throw new Error('This account does not have admin privileges');
+      }
+
       onLogin({ ...userData.data, token });
-      navigate('/');
+      navigate(userData.data.role === 'admin' ? '/' : '/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -34,8 +41,24 @@ export default function Login({ onLogin }) {
 
       <div className="z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 shadow-2xl animate-in fade-in scale-in">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-black text-white mb-2 tracking-tight">Welcome Back</h2>
-          <p className="text-slate-400 font-medium">Enter your credentials to continue</p>
+          <h2 className="text-4xl font-black text-white mb-2 tracking-tight">
+            {isAdmin ? 'Admin Portal' : 'Welcome Back'}
+          </h2>
+          <p className="text-slate-400 font-medium">
+            {isAdmin ? 'Authorized System Access Only' : 'Enter your credentials to continue'}
+          </p>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className="flex bg-white/5 p-1 rounded-2xl mb-8">
+            <button 
+                onClick={() => setIsAdmin(false)}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${!isAdmin ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+            >User Login</button>
+            <button 
+                onClick={() => setIsAdmin(true)}
+                className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${isAdmin ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+            >Admin Login</button>
         </div>
 
         {error && (
@@ -53,7 +76,7 @@ export default function Login({ onLogin }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="yours@example.com"
+                placeholder={isAdmin ? "admin@fin2future.com" : "yours@example.com"}
                 required
                 className="w-full h-14 pl-5 pr-5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all group-hover:bg-white/10"
               />
@@ -77,7 +100,7 @@ export default function Login({ onLogin }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-14 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-2xl font-black text-lg transition-all duration-300 shadow-xl shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group"
+            className={`w-full h-14 bg-gradient-to-r ${isAdmin ? 'from-rose-600 to-rose-500 shadow-rose-600/20' : 'from-indigo-600 to-indigo-500 shadow-indigo-600/20'} text-white rounded-2xl font-black text-lg transition-all duration-300 shadow-xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group`}
           >
             {loading ? (
               <span className="flex items-center justify-center">
@@ -85,19 +108,21 @@ export default function Login({ onLogin }) {
                 Processing...
               </span>
             ) : (
-              'Sign In'
+              isAdmin ? 'Grant Access' : 'Sign In'
             )}
           </button>
         </form>
 
-        <div className="mt-10 text-center">
-          <p className="text-slate-400 font-medium">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-white font-bold hover:text-indigo-400 transition-colors ml-1">
-              Sign up
-            </Link>
-          </p>
-        </div>
+        {!isAdmin && (
+          <div className="mt-10 text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <p className="text-slate-400 font-medium">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-white font-bold hover:text-indigo-400 transition-colors ml-1">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

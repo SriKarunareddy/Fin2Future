@@ -46,7 +46,16 @@ export default function Header({ user, onLogout }) {
                     {user.name && <p className="text-sm text-slate-400">{user.name}</p>}
                   </div>
                   <div className="space-y-2">
-                    <p className="text-xs text-slate-500 px-1 font-medium">Role: {user.role || 'User'}</p>
+                    <p className="text-xs text-slate-500 px-1 font-medium italic uppercase tracking-tighter">Role: {user.role || 'User'}</p>
+                    {user.role === 'admin' && (
+                      <Link 
+                        to="/admin/books"
+                        onClick={() => setShowProfileMenu(false)}
+                        className="block w-full text-left px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-xl text-sm font-bold transition-colors border border-indigo-500/20"
+                      >
+                        Manage Content
+                      </Link>
+                    )}
                     <button 
                       onClick={() => {
                         onLogout();

@@ -35,6 +35,39 @@ export default function Dashboard({ user, onLogout }) {
     { name: 'Personalized Finance', to: '/personalized-finance', icon: '💎', colorClass: 'hover:shadow-purple-500/20 bg-purple-500/20 shadow-purple-500/10 via-purple-500', iconBg: 'bg-purple-500/20', shadowColor: 'shadow-purple-500/10', viaColor: 'via-purple-500', desc: 'Tailored paths for your goals.' },
   ];
 
+  if (user?.role === 'admin') {
+    navItems.push({ 
+        name: 'Manage Books', 
+        to: '/admin/books', 
+        icon: '🛡️', 
+        colorClass: 'hover:shadow-rose-600/30 bg-rose-600/20 shadow-rose-600/20 via-rose-600', 
+        iconBg: 'bg-rose-600/20', 
+        shadowColor: 'shadow-rose-600/20', 
+        viaColor: 'via-rose-600 border-2 border-rose-500/30', 
+        desc: 'Admin: Upload and manage PDF library.' 
+    });
+    navItems.push({ 
+        name: 'Manage Curriculum', 
+        to: '/admin/learning', 
+        icon: '🎓', 
+        colorClass: 'hover:shadow-indigo-600/30 bg-indigo-600/20 shadow-indigo-600/20 via-indigo-600', 
+        iconBg: 'bg-indigo-600/20', 
+        shadowColor: 'shadow-indigo-600/20', 
+        viaColor: 'via-indigo-600 border-2 border-indigo-500/30', 
+        desc: 'Admin: Create modules, lessons and rich content.' 
+    });
+    navItems.push({ 
+        name: 'Manage Gov Analytics', 
+        to: '/admin/gov', 
+        icon: '🏛️', 
+        colorClass: 'hover:shadow-orange-600/30 bg-orange-600/20 shadow-orange-600/20 via-orange-600', 
+        iconBg: 'bg-orange-600/20', 
+        shadowColor: 'shadow-orange-600/20', 
+        viaColor: 'via-orange-600 border-2 border-orange-500/30', 
+        desc: 'Admin: Manage government updates and national data cards.' 
+    });
+  }
+
   return (
     <div className="flex-grow flex flex-col items-center p-6 text-slate-100 relative overflow-hidden font-sans">
       {/* Background Orbs */}

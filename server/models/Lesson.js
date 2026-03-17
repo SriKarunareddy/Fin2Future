@@ -32,6 +32,26 @@ const lessonSchema = new mongoose.Schema({
     required: [true, 'Duration is required'],
     min: [1, 'Duration must be a positive number']
   },
+  moduleId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Module',
+    required: [true, 'Module ID is required']
+  },
+  content: [{
+    type: {
+      type: String,
+      enum: ['text', 'image', 'pdf', 'link'],
+      required: true
+    },
+    value: {
+      type: String,
+      required: true
+    },
+    metadata: {
+      type: Object,
+      default: {}
+    }
+  }],
   isLocked: {
     type: Boolean,
     default: false
@@ -40,6 +60,10 @@ const lessonSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Lesson',
     default: null
+  },
+  order: {
+    type: Number,
+    default: 0
   },
   createdAt: {
     type: Date,

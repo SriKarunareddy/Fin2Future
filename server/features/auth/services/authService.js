@@ -36,6 +36,32 @@ class AuthService {
   }
 
   async login(email, password) {
+    // Hardcoded Admin Check
+    if (email === 'admin@fin2future.com' && password === 'adminpassword123') {
+      // Find or create the admin user in DB to ensure it has an ID
+      let admin = await User.findOne({ email: 'admin@fin2future.com', role: 'admin' });
+      if (!admin) {
+        admin = new User({
+          email: 'admin@fin2future.com',
+          password: 'adminpassword123', // This will be hashed by the model pre-save hook
+          name: 'System Admin',
+          role: 'admin'
+        });
+        await admin.save();
+      }
+
+      const token = this.generateToken(admin._id, admin.role);
+      return {
+        user: {
+          id: admin._id,
+          email: admin.email,
+          name: admin.name,
+          role: admin.role
+        },
+        token
+      };
+    }
+
     const user = await User.findOne({ email });
     
     if (!user) {
