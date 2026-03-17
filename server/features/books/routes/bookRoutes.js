@@ -4,18 +4,9 @@ import path from 'path';
 import { uploadBook, getBooks, deleteBook } from '../controllers/bookController.js';
 import { authenticate, authorize } from '../../../middleware/auth.js';
 
-const router = express.Router();
+import { bookStorage } from '../../../config/cloudinary.js';
 
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/books');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+const router = express.Router();
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'application/pdf') {
@@ -25,8 +16,15 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Use Cloudinary storage if configured, else fallback to disk (handled by a unified logic)
 const upload = multer({ 
-  storage: storage,
+  storage: process.env.CLOUDINARY_API_KEY ? bookStorage : multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/books'),
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+  }),
   fileFilter: fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });

@@ -1,6 +1,6 @@
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
@@ -11,12 +11,13 @@ import quizRoutes from './features/budget-game/routes/quiz.routes.js';
 import learningRoutes from './features/learning-modules/routes/learning.routes.js';
 import financeRoutes from './features/personalized-finance/routes/finance.routes.js';
 import bookRoutes from './features/books/routes/bookRoutes.js';
+import moduleRoutes from './features/learning-modules/routes/moduleRoutes.js';
+import govRoutes from './features/gov-finance/routes/govRoutes.js';
+import uploadRoutes from './features/common/routes/uploadRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
@@ -39,6 +40,9 @@ app.use('/api/quiz', quizRoutes);
 app.use('/api/learning', learningRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/books', bookRoutes);
+app.use('/api/modules', moduleRoutes);
+app.use('/api/gov', govRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

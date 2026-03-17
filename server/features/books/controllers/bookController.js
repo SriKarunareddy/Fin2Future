@@ -12,7 +12,8 @@ export const uploadBook = async (req, res, next) => {
       throw error;
     }
 
-    const pdfUrl = `/uploads/books/${req.file.filename}`;
+    // If using Cloudinary, req.file.path is the URL
+    const pdfUrl = req.file.path.startsWith('http') ? req.file.path : `/uploads/books/${req.file.filename}`;
 
     const book = new Book({
       title,
@@ -54,10 +55,14 @@ export const deleteBook = async (req, res, next) => {
       throw error;
     }
 
-    // Delete file from disk
-    const filePath = path.join(process.cwd(), book.pdfUrl.replace(/^\//, ''));
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    // Delete file from disk or Cloudinary
+    if (book.pdfUrl.includes('cloudinary')) {
+      const { cloudinary } = await import('../../../config/cloudinary.js');
+      const publicId = book.pdfUrl.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(`fin2future/books/${publicId}`, { resource_type: 'raw' });
+    } else {
+      const filePath = path.join(process.cwd(), book.pdfUrl.replace(/^\//, ''));
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
 
     await book.deleteOne();
