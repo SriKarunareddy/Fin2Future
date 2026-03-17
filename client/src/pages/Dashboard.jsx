@@ -35,6 +35,19 @@ export default function Dashboard({ user, onLogout }) {
     { name: 'Personalized Finance', to: '/personalized-finance', icon: '💎', colorClass: 'hover:shadow-purple-500/20 bg-purple-500/20 shadow-purple-500/10 via-purple-500', iconBg: 'bg-purple-500/20', shadowColor: 'shadow-purple-500/10', viaColor: 'via-purple-500', desc: 'Tailored paths for your goals.' },
   ];
 
+  if (user?.role === 'admin') {
+    navItems.push({ 
+        name: 'Manage Books', 
+        to: '/admin/books', 
+        icon: '🛡️', 
+        colorClass: 'hover:shadow-rose-600/30 bg-rose-600/20 shadow-rose-600/20 via-rose-600', 
+        iconBg: 'bg-rose-600/20', 
+        shadowColor: 'shadow-rose-600/20', 
+        viaColor: 'via-rose-600 border-2 border-rose-500/30', 
+        desc: 'Admin: Upload and manage PDF library.' 
+    });
+  }
+
   return (
     <div className="flex-grow flex flex-col items-center p-6 text-slate-100 relative overflow-hidden font-sans">
       {/* Background Orbs */}

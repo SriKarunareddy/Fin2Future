@@ -10,6 +10,7 @@ import progressRoutes from './features/learning-modules/routes/progressRoutes.js
 import quizRoutes from './features/budget-game/routes/quiz.routes.js';
 import learningRoutes from './features/learning-modules/routes/learning.routes.js';
 import financeRoutes from './features/personalized-finance/routes/finance.routes.js';
+import bookRoutes from './features/books/routes/bookRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/lessons', lessonRoutes);
@@ -34,6 +38,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/learning', learningRoutes);
 app.use('/api/finance', financeRoutes);
+app.use('/api/books', bookRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
