@@ -135,15 +135,48 @@ const LevelSelection = ({ userLevel, playerProgress, onSelectLevel }) => {
                         <div className="flex items-center space-x-1">
                           <span>🎮</span>
                           <span className="text-amber-200">
-                            {playerProgress?.gamesPlayed?.[level.id] || 0} played
+                            {(() => {
+                              const gamesPlayed = playerProgress?.gamesPlayed || {};
+                              const levelGames = {
+                                Basic: ['spend-smart-sprint', 'needs-vs-wants', 'savings-jar-builder'],
+                                Medium: ['investment-garden', 'scam-detective'],
+                                Advanced: ['nifty-trader', 'candlestick-master']
+                              };
+                              const gamesInThisLevel = levelGames[level.id] || [];
+                              const playedCount = gamesInThisLevel.filter(gameName => gamesPlayed[gameName] && gamesPlayed[gameName] > 0).length;
+                              const totalGames = levelGames[level.id]?.length || 1;
+                              return `${playedCount} / ${totalGames} played`;
+                            })()}
                           </span>
                         </div>
                       </div>
                       {/* progress bar at bottom */}
                       <div className="mt-4">
-                        <p className="text-xs text-white">Progress {playerProgress?.progress?.[level.id] || 0}%</p>
+                        <p className="text-xs text-white">Progress {(() => {
+                          const gamesPlayed = playerProgress?.gamesPlayed || {};
+                          const levelGames = {
+                            Basic: ['spend-smart-sprint', 'needs-vs-wants', 'savings-jar-builder', 'flash-finance-lightning'],
+                            Medium: ['investment-garden', 'scam-detective'],
+                            Advanced: ['nifty-trader', 'candlestick-master']
+                          };
+                          const gamesInThisLevel = levelGames[level.id] || [];
+                          const playedCount = gamesInThisLevel.filter(gameName => gamesPlayed[gameName] && gamesPlayed[gameName] > 0).length;
+                          const totalGames = levelGames[level.id]?.length || 1;
+                          return Math.round((playedCount / totalGames) * 100);
+                        })()}%</p>
                         <div className="w-full bg-slate-700 rounded-full h-2 mt-1">
-                          <div className={`h-2 rounded-full bg-gradient-to-r ${level.color}`} style={{ width: `${playerProgress?.progress?.[level.id] || 0}%` }} />
+                          <div className={`h-2 rounded-full bg-gradient-to-r ${level.color}`} style={{ width: `${(() => {
+                            const gamesPlayed = playerProgress?.gamesPlayed || {};
+                            const levelGames = {
+                              Basic: ['spend-smart-sprint', 'needs-vs-wants', 'savings-jar-builder', 'flash-finance-lightning'],
+                              Medium: ['investment-garden', 'scam-detective'],
+                              Advanced: ['nifty-trader', 'candlestick-master']
+                            };
+                            const gamesInThisLevel = levelGames[level.id] || [];
+                            const playedCount = gamesInThisLevel.filter(gameName => gamesPlayed[gameName] && gamesPlayed[gameName] > 0).length;
+                            const totalGames = levelGames[level.id]?.length || 1;
+                            return Math.round((playedCount / totalGames) * 100);
+                          })()}%` }} />
                         </div>
                       </div>
                     </>

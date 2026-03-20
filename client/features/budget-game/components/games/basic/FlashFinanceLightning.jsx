@@ -325,6 +325,7 @@ const FlashFinanceLightning = ({ onComplete, onBack, playerProgress = {} }) => {
     if (score >= 100) badges.push({ icon: '👑', name: 'Speed Champion' });
     
     return { 
+      type: 'financial',
       xp: currentXP, 
       coins: coins, 
       badges,

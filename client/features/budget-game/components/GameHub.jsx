@@ -56,6 +56,16 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       
       const updatedProgress = awardGameXP(playerProgress, selectedGame, difficulty, rewards.score, rewards.perfect);
       
+      // Update overall games completed counter
+      const totalGamesPlayed = Object.keys(updatedProgress.gamesPlayed || {}).length;
+      
+      // Store overall progress for the widget
+      localStorage.setItem('overall_games_progress', JSON.stringify({
+        totalGames: 7, // 3 Basic + 2 Medium + 2 Advanced
+        completedGames: totalGamesPlayed,
+        percentage: Math.round((totalGamesPlayed / 7) * 100)
+      }));
+      
       // Check if medium level is completed and award bonus
       if (selectedLevel === 'Medium') {
         const finalProgress = awardMediumLevelBonus(updatedProgress);
@@ -72,8 +82,8 @@ const GameHub = ({ userLevel = 'Basic', userId = 'demo-user' }) => {
       // Real-time XP updates during gameplay
       const updatedProgress = {
         ...playerProgress,
-        xp: Math.max(0, playerProgress.xp + rewards.xpChange),
-        coins: Math.max(0, playerProgress.coins + rewards.coinChange)
+        xp: playerProgress.xp + (rewards.xp || 0),
+        coins: playerProgress.coins + (rewards.coins || 0)
       };
       setPlayerProgress(updatedProgress);
       savePlayerProgress(userId, updatedProgress);

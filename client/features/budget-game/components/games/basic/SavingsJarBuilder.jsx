@@ -152,6 +152,7 @@ const SavingsJarBuilder = ({ onComplete, onBack, playerProgress = {} }) => {
     if (efficiency >= 80) badges.push({ icon: '⚡', name: 'Efficient Saver' });
     
     return {
+      type: 'financial',
       xp: currentXP,
       coins: coins,
       badges,

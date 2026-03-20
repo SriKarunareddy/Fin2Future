@@ -113,8 +113,10 @@ const SpendSmartSprint = ({ onComplete, onBack, playerProgress }) => {
     });
 
     onComplete({
+      type: 'financial',
       xp: earnedXP,
       coins: earnedCoins,
+      score: score,
       badges: newBadges
     });
   };

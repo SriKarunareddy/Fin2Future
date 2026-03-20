@@ -139,7 +139,7 @@ const NeedsVsWantsSwipe = ({ onComplete, onBack, playerProgress = {} }) => {
       badges.push({ icon: '👑', name: 'Perfect Score' });
     }
 
-    return { xp: totalXP, coins: totalCoins, badges };
+    return { type: 'financial', xp: totalXP, coins: totalCoins, score, badges };
   };
 
   if (gameOver) {
