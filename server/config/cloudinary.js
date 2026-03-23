@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import './env.js';
+import pkg from 'multer-storage-cloudinary';
+const CloudinaryStorage = pkg.CloudinaryStorage || pkg;
+import '../config/env.js';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,7 +14,7 @@ const bookStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'fin2future/books',
-    resource_type: 'raw', // Use raw for PDFs
+    resource_type: 'raw',
     public_id: (req, file) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       return file.fieldname + '-' + uniqueSuffix;
@@ -26,7 +27,7 @@ const mediaStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'fin2future/learning',
-    resource_type: 'auto', // auto handles images and raw
+    resource_type: 'auto',
     public_id: (req, file) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       return file.fieldname + '-' + uniqueSuffix;

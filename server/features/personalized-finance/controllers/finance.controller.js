@@ -1,6 +1,7 @@
 import Transaction from '../../../models/Transaction.js';
 import Goal from '../../../models/Goal.js';
 import Budget from '../../../models/Budget.js';
+import { generateAIInsights } from '../services/aiInsightsService.js';
 
 export const addTransaction = async (req, res) => {
   try {
@@ -201,6 +202,7 @@ export const getPrediction = async (req, res) => {
   }
 };
 
+
 export const getInsights = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -208,8 +210,17 @@ export const getInsights = async (req, res) => {
     const transactions = await Transaction.find({ user: userId });
     const expenses = transactions.filter(t => t.type === 'expense');
     
+    // 🚀 ATTEMPT REAL AI INSIGHTS FIRST
+    if (process.env.GEMINI_API_KEY) {
+        const aiInsights = await generateAIInsights(transactions, budget);
+        if (aiInsights && Array.isArray(aiInsights) && aiInsights.length > 0) {
+            return res.status(200).json({ success: true, data: aiInsights });
+        }
+    }
+
     const insights = [];
     
+    // Rule-based Fallback Insights
     // 1. Savings rate
     const totalIncome = budget ? budget.monthlyIncome : 0;
     const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -239,6 +250,13 @@ export const getInsights = async (req, res) => {
     const shoppingExp = expenses.filter(e => e.category === 'Shopping').reduce((sum, e) => sum + e.amount, 0);
     if (shoppingExp > 0) {
         insights.push(`Reducing shopping expenses by 10% can increase savings by ₹${(shoppingExp * 0.1).toFixed(0)}.`);
+    }
+
+    // Default Tips for New Users (so it's never empty)
+    if (insights.length < 2) {
+        if (!budget) insights.push("Setting up your monthly budget is the first step to financial freedom.");
+        insights.push("Aim to save at least 20% of your income to build a healthy emergency fund.");
+        insights.push("Regularly review your subscriptions to avoid paying for services you don't use.");
     }
 
     res.status(200).json({ success: true, data: insights });

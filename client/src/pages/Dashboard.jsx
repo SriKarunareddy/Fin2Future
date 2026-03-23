@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import ChatBot from '../components/ChatBot';
 
 export default function Dashboard({ user, onLogout }) {
   const [analytics, setAnalytics] = useState({ gamesPlayed: 0, modulesCompleted: 0 });
@@ -130,6 +131,7 @@ export default function Dashboard({ user, onLogout }) {
           ))}
         </div>
       </div>
+      {user && <ChatBot userId={user._id} />}
     </div>
   );
 }

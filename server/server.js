@@ -14,6 +14,7 @@ import bookRoutes from './features/books/routes/bookRoutes.js';
 import moduleRoutes from './features/learning-modules/routes/moduleRoutes.js';
 import govRoutes from './features/gov-finance/routes/govRoutes.js';
 import uploadRoutes from './features/common/routes/uploadRoutes.js';
+import chatRoutes from './features/chat/routes/chatRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +44,7 @@ app.use('/api/books', bookRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/gov', govRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

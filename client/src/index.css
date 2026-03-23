@@ -181,23 +181,6 @@
   animation-delay: 4s;
 }
 
-.animate-in {
-  animation-duration: 0.3s;
-  animation-fill-mode: forwards;
-}
-
-.fade-in {
-  animation-name: fadeIn;
-}
-
-.slide-in-from-top-2 {
-  animation-name: slideDown;
-}
-
-.slide-in-from-bottom-4 {
-  animation-name: slideUp;
-}
-
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -207,6 +190,57 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes slideUpLarge {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in {
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.zoom-in-95 {
+  animation-name: zoomIn;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideDown;
+}
+
+.slide-in-from-bottom-2 {
+  animation-name: slideUp;
+}
+
+.slide-in-from-bottom-4 {
+  animation-name: slideUp;
+}
+
+.slide-in-from-bottom-10 {
+  animation-name: slideUpLarge;
 }
 
 /* Base styles */

@@ -5,8 +5,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load the root .env
-const result = dotenv.config({ path: path.join(__dirname, '../../.env') });
+// Try loading the local .env first (in server/), then the root one.
+let result = dotenv.config({ path: path.join(__dirname, '../.env') });
+if (result.error) {
+  result = dotenv.config({ path: path.join(__dirname, '../../.env') });
+}
 
 if (result.error) {
   console.error('Error loading .env file:', result.error);
