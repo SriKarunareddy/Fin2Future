@@ -6,6 +6,7 @@ export default function BooksPage({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('All');
+  const [selectedBook, setSelectedBook] = useState(null);
 
   useEffect(() => {
     fetchBooks();
@@ -22,11 +23,54 @@ export default function BooksPage({ user }) {
     }
   };
 
+  const openBook = (book) => {
+    setSelectedBook(book);
+  };
+
+  const closeBook = () => {
+    setSelectedBook(null);
+  };
+
   const categories = ['All', ...new Set(books.map(b => b.category))];
   const filteredBooks = filter === 'All' ? books : books.filter(b => b.category === filter);
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
+      {/* PDF Viewer Modal */}
+      {selectedBook && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 rounded-3xl w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl border border-white/10">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <div>
+                <h2 className="text-2xl font-black text-white mb-1">{selectedBook.title}</h2>
+                <p className="text-slate-400 text-sm">by {selectedBook.author}</p>
+              </div>
+              <button
+                onClick={closeBook}
+                className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-xl transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* PDF Viewer */}
+            <div className="flex-1 p-6">
+              <iframe
+                src={`https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(selectedBook.pdfUrl)}`}
+                className="w-full h-full rounded-xl bg-white"
+                title={selectedBook.title}
+                frameBorder="0"
+                allow="autoplay"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Original Content */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div>
           <h1 className="text-4xl font-black text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
@@ -84,15 +128,13 @@ export default function BooksPage({ user }) {
                 {book.description}
               </p>
 
-              <a
-                href={book.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => openBook(book)}
                 className="inline-flex items-center justify-center gap-2 w-full bg-white/10 hover:bg-indigo-600 text-white font-black py-4 rounded-2xl transition-all duration-300 group/btn shadow-xl"
               >
                 Read Book
                 <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </a>
+              </button>
             </div>
           ))}
         </div>
