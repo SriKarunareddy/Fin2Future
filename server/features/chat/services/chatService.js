@@ -1,16 +1,26 @@
 import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import Transaction from "../../../models/Transaction.js";
 import Budget from "../../../models/Budget.js";
 import Goal from "../../../models/Goal.js";
 import GovApiService from "../../gov-finance/services/govApiService.js";
+import mongoose from "mongoose";
 
-// Check for OpenAI API Key (support both GEMINI and OPENAI but prioritize OPENAI now as requested)
-const apiKey = process.env.OPENAI_API_KEY;
-const openai = apiKey ? new OpenAI({ apiKey }) : null;
+// Support both Gemini and OpenAI
+const openaiApiKey = process.env.OPENAI_API_KEY;
+const geminiApiKey = process.env.GEMINI_API_KEY;
+
+const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null;
+const genAI = geminiApiKey ? new GoogleGenerativeAI(geminiApiKey) : null;
 
 export const generateChatResponse = async (userId, userMessage, chatHistory = []) => {
-    if (!apiKey) {
-        throw new Error("OpenAI API key is not configured across your .env file.");
+    // 0. Validate userId to avoid CastError
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw new Error("Invalid User ID format.");
+    }
+
+    if (!openaiApiKey && !geminiApiKey) {
+        throw new Error("No AI API key is configured (OpenAI or Gemini). Please check your .env file.");
     }
 
     try {
@@ -53,23 +63,50 @@ INSTRUCTIONS:
 7. If data is missing for the user, politely inform them they can start by adding a budget or transactions.
 `;
 
-        const messages = [
-            { role: "system", content: systemPrompt },
-            ...chatHistory.map(msg => ({
-                role: msg.sender === 'user' ? 'user' : 'assistant',
-                content: msg.text
-            })),
-            { role: "user", content: userMessage }
-        ];
+        // 4. Use Gemini if available (higher priority due to free tier)
+        if (genAI) {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            // Format history for Gemini
+            const contents = [
+                { role: "user", parts: [{ text: systemPrompt + "\n\nUnderstood. I will help the user based on this context." }] },
+                { role: "model", parts: [{ text: "Understood. I'm ready to assist as FinBot." }] },
+                ...chatHistory.map(msg => ({
+                    role: msg.sender === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.text }]
+                })),
+                { role: "user", parts: [{ text: userMessage }] }
+            ];
 
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: messages,
-        });
+            const result = await model.generateContent({ contents });
+            return result.response.text();
+        }
 
-        return response.choices[0].message.content;
+        // 5. Fallback to OpenAI
+        if (openai) {
+            const messages = [
+                { role: "system", content: systemPrompt },
+                ...chatHistory.map(msg => ({
+                    role: msg.sender === 'user' ? 'user' : 'assistant',
+                    content: msg.text
+                })),
+                { role: "user", content: userMessage }
+            ];
+
+            const response = await openai.chat.completions.create({
+                model: "gpt-4o",
+                messages: messages,
+            });
+
+            return response.choices[0].message.content;
+        }
+
     } catch (error) {
-        console.error("OpenAI Chat Service Error:", error);
+        if (error.status === 429) {
+            console.error("AI Service Error: Quota Exceeded (429).");
+            throw new Error("Chatbot is currently busy or out of quota. If using OpenAI, please switch to Gemini in your .env file.");
+        }
+        console.error("AI Chat Service Error:", error);
         throw error;
     }
 };
